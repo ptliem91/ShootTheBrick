@@ -141,16 +141,17 @@ public class Ball : MonoBehaviour
 		}
 
 		if (target.tag == "Rocket") {
-			if (gameObject.tag != "Small Ball") {
-				GameObject particleSys = (GameObject)Instantiate (ballParticle, transform.position, Quaternion.identity);
+			GameObject particleSys = (GameObject)Instantiate (ballParticle, transform.position, Quaternion.identity);
 
+			if (gameObject.tag != "Small Ball") {
 				InitializeBallsAndTurnOffCurrentBall ();
 
-				Destroy (particleSys, 5f);
 			} else {
 				AudioSource.PlayClipAtPoint (popSounds [Random.Range (0, popSounds.Length)], transform.position);
 				gameObject.SetActive (false);
 			}
+
+			Destroy (particleSys, 3f);
 		}
 	}
 

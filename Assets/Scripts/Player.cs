@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
 	void FixedUpdate ()
 	{
 		PlayerWalk ();
+
 	}
 
 	void Shoot ()
@@ -123,8 +124,8 @@ public class Player : MonoBehaviour
 			StartCoroutine (KillThePlayerAndRestartGame ());
 		}
 
-		if (target.tag == "SpawnBall") {
-			StartCoroutine (KillThePlayerAndRestartGame ());
-		}
+//		if (target.tag == "SpawnBall") {
+//			StartCoroutine (KillThePlayerAndRestartGame ());
+//		}
 	}
 }
