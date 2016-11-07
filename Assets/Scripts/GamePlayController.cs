@@ -32,6 +32,11 @@ public class GamePlayController : MonoBehaviour
 		}
 	}
 
+	void Start ()
+	{
+		Time.timeScale = 1f;
+	}
+
 	void Update ()
 	{
 		if (!CheckExistedBall ()) {

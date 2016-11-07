@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
 	private bool canShoot;
 	private bool canWalk;
 
+	public UIScript uiScript;
+
 	// Use this for initialization
 	void Awake ()
 	{
@@ -121,11 +123,19 @@ public class Player : MonoBehaviour
 		string[] name = target.name.Split ();
 
 		if (name.Length > 1 && name [1] == "Ball") {
-			StartCoroutine (KillThePlayerAndRestartGame ());
+//			StartCoroutine (KillThePlayerAndRestartGame ());
+			KillThePlayer ();
 		}
 
 //		if (target.tag == "SpawnBall") {
 //			StartCoroutine (KillThePlayerAndRestartGame ());
 //		}
+	}
+
+	void KillThePlayer ()
+	{
+		Time.timeScale = 0f;
+
+		uiScript.FailedGame ();
 	}
 }

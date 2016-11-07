@@ -9,7 +9,7 @@ public class UIScript : MonoBehaviour
 	private Button btnPause;
 
 	[SerializeField]
-	private GameObject panelPause;
+	private GameObject panelPause, panelFailed;
 
 	public void PauseGameButton ()
 	{
@@ -31,5 +31,21 @@ public class UIScript : MonoBehaviour
 	{
 		Time.timeScale = 1f;
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+	}
+
+	public void NextLevel ()
+	{
+		string[] arrNameSceneCurrent = SceneManager.GetActiveScene ().name.Split ("_" [0]);
+
+		int nextLevel = int.Parse (arrNameSceneCurrent [2]) + 1;
+
+		string newScence = arrNameSceneCurrent [0] + "_" + arrNameSceneCurrent [1] + "_" + nextLevel;
+
+		SceneManager.LoadScene (newScence);
+	}
+
+	public void FailedGame ()
+	{
+		panelFailed.SetActive (true);
 	}
 }
