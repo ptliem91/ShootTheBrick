@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private AudioClip shootingSound;
 
+	[SerializeField]
+	private AudioSource backgroundSound;
+
 	public float speed = 8f;
 	private float maxVelocity = 4f;
 
@@ -18,6 +21,7 @@ public class Player : MonoBehaviour
 
 	private bool canShoot;
 	private bool canWalk;
+	private bool moveLeft = false;
 
 	public UIScript uiScript;
 
@@ -46,7 +50,7 @@ public class Player : MonoBehaviour
 	{
 		if ((Input.GetMouseButtonDown (0) || Input.GetKeyDown (KeyCode.Space)) && canShoot) {
 			canShoot = false;
-			StartCoroutine (ShootTheRocket ());
+			StartCoroutine (ShootTheRocket (moveLeft));
 		}
 	}
 
@@ -60,28 +64,36 @@ public class Player : MonoBehaviour
 		if (canWalk) {
 			if (h > 0) {
 				//moving right
+				moveLeft = false;
+
 				if (velocity < maxVelocity) {
 					force = speed;
 				}
 
-//				Vector3 scale = transform.localScale;
-//				scale.x = 1;
-//				transform.localScale = scale;
+				Vector3 scale = transform.localScale;
+				scale.x = 2.5f;
 
-				anim.SetBool ("Walking", true);
+				transform.localScale = scale;
+//				transform.rotation = Quaternion.Euler (0, 0, 40);
+
+				anim.SetBool ("HWalking", true);
 			} else if (h < 0) {
 				//moving left
+				moveLeft = true;
+
 				if (velocity < maxVelocity) {
 					force = -speed;
 				}
 
-//				Vector3 scale = transform.localScale;
-//				scale.x = -1;
-//				transform.localScale = scale;
+				Vector3 scale = transform.localScale;
+				scale.x = -2.5f;
 
-				anim.SetBool ("Walking", true);
+				transform.localScale = scale;
+//				transform.rotation = Quaternion.Euler (0, 0, -40);
+
+				anim.SetBool ("HWalking", true);
 			} else {
-				anim.SetBool ("Walking", false);
+				anim.SetBool ("HWalking", false);
 			}
 		}
 
@@ -89,23 +101,30 @@ public class Player : MonoBehaviour
 	}
 
 
-	IEnumerator ShootTheRocket ()
+	IEnumerator ShootTheRocket (bool moveLeft)
 	{
 		canWalk = false;
-		anim.Play ("Shooting");
+		anim.Play ("HeroShooting");
 
 		Vector3 temp = transform.position;
 		temp.y += 1f;
+
+//		if (moveLeft) {
+//			rocket.transform.rotation = Quaternion.Euler (0, 0, 45);
+//		} else {
+//			rocket.transform.rotation = Quaternion.Euler (0, 0, -45);
+//		}
+
 
 		Instantiate (rocket, temp, Quaternion.identity);
 
 		AudioSource.PlayClipAtPoint (shootingSound, transform.position);
 
-		yield return new WaitForSeconds (0.15f);
-		anim.SetBool ("Shooting", false);
+		yield return new WaitForSeconds (0.16f);
+		anim.SetBool ("HShooting", false);
 		canWalk = true;
 
-		yield return new WaitForSeconds (0.15f);
+		yield return new WaitForSeconds (0.16f);
 		canShoot = true;
 	}
 
@@ -134,7 +153,9 @@ public class Player : MonoBehaviour
 
 	void KillThePlayer ()
 	{
-		Time.timeScale = 0f;
+		anim.SetBool ("HDied", true);
+
+		backgroundSound.Stop ();
 
 		uiScript.FailedGame ();
 	}

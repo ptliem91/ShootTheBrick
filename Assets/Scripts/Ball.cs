@@ -18,10 +18,10 @@ public class Ball : MonoBehaviour
 	private Ball ball1Script, ball2Script;
 
 	[SerializeField]
-	private AudioClip[] popSounds;
+	private AudioClip impactSound, explosionSound;
 
 	[SerializeField]
-	private GameObject ballParticle;
+	private GameObject largestExplosionParticle, largeExplosionParticle, mediumExplosionParticle, smallExplosionParticle, smallestExplosionParticle;
 
 	// Use this for initialization
 	void Awake ()
@@ -65,7 +65,7 @@ public class Ball : MonoBehaviour
 		ball1.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0, 2.5f);
 		ball2.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0, 2.5f);
 
-		AudioSource.PlayClipAtPoint (popSounds [Random.Range (0, popSounds.Length)], transform.position);
+		AudioSource.PlayClipAtPoint (explosionSound, transform.position);
 		gameObject.SetActive (false);
 	
 	}
@@ -130,28 +130,52 @@ public class Ball : MonoBehaviour
 	{
 		if (target.tag == "Ground") {
 			myBody.velocity = new Vector2 (0, forceY);
+			AudioSource.PlayClipAtPoint (impactSound, transform.position);
 		}
 
 		if (target.tag == "Right Wall") {
 			SetMoveLeft (true);
+			AudioSource.PlayClipAtPoint (impactSound, transform.position);
 		}
 
 		if (target.tag == "Left Wall") {
 			SetMoveRight (true);
+			AudioSource.PlayClipAtPoint (impactSound, transform.position);
 		}
 
 		if (target.tag == "Rocket") {
-			GameObject particleSys = (GameObject)Instantiate (ballParticle, transform.position, Quaternion.identity);
+			GameObject particleSys = InitExplosionParticle ();
 
 			if (gameObject.tag != "Small Ball") {
 				InitializeBallsAndTurnOffCurrentBall ();
 
 			} else {
-				AudioSource.PlayClipAtPoint (popSounds [Random.Range (0, popSounds.Length)], transform.position);
+				AudioSource.PlayClipAtPoint (explosionSound, transform.position);
 				gameObject.SetActive (false);
 			}
 
 			Destroy (particleSys, 3f);
+		}
+	}
+
+	private GameObject InitExplosionParticle ()
+	{
+		switch (this.gameObject.tag) {
+		case "Largest Ball":
+			return (GameObject)Instantiate (largestExplosionParticle, transform.position, Quaternion.identity);
+
+		case "Large Ball":
+			return (GameObject)Instantiate (largeExplosionParticle, transform.position, Quaternion.identity);
+
+		case "Medium Ball":
+			return (GameObject)Instantiate (mediumExplosionParticle, transform.position, Quaternion.identity);
+			;
+
+		case "Small Ball":
+			return (GameObject)Instantiate (smallExplosionParticle, transform.position, Quaternion.identity);
+
+		default:
+			return (GameObject)Instantiate (smallestExplosionParticle, transform.position, Quaternion.identity);
 		}
 	}
 

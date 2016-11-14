@@ -23,6 +23,13 @@ public class Rocket : MonoBehaviour
 	{
 		myBody.velocity = new Vector2 (0, speed);
 
+//		print (speed * Mathf.Cos (45f) + "-y: " + speed * Mathf.Sin (45f));
+//		Vector3 v = new Vector3 ((speed * Mathf.Cos (45f)), (speed * Mathf.Sin (45f)), 0);
+//		transform.position += v;
+
+//		var shootDir = Quaternion.Euler (0, 0, 45f) * Vector3.right;
+//		myBody.velocity = shootDir * speed; 
+
 	}
 
 	void OnTriggerEnter2D (Collider2D target)

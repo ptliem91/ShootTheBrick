@@ -193,7 +193,7 @@ public class GamePlayController : MonoBehaviour
 		return false;
 	}
 
-	private void DestroyAllRocketExist ()
+	public void DestroyAllRocketExist ()
 	{
 		GameObject[] gos = GameObject.FindGameObjectsWithTag ("Rocket");
 		for (int i = 0; i < gos.Length; i++) {
