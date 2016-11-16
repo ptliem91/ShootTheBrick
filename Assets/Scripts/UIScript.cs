@@ -9,7 +9,7 @@ public class UIScript : MonoBehaviour
 	private Button btnPause;
 
 	[SerializeField]
-	private GameObject panelPause, panelFailed, panelLevelSelect;
+	private GameObject panelPause, panelFailed;
 
 	public void PauseGameButton ()
 	{
@@ -84,6 +84,7 @@ public class UIScript : MonoBehaviour
 
 	public void showPanelLevelSelect ()
 	{
-		SceneManager.LoadScene ("GP_Lvl_Menu");
+//		SceneManager.LoadScene ("GP_Lvl_Menu");
+		Application.LoadLevel (0);
 	}
 }

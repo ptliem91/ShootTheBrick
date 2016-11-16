@@ -24,7 +24,7 @@ public class ScrollRectSnap : MonoBehaviour
 	private bool isButtonSelected = false;
 
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
 		int bttnLenght = bttn.Length;
 		distance = new float[bttnLenght];
@@ -34,6 +34,8 @@ public class ScrollRectSnap : MonoBehaviour
 		bttnDistance = (int)Mathf.Abs (bttn [1].GetComponent<RectTransform> ().anchoredPosition.x - bttn [0].GetComponent<RectTransform> ().anchoredPosition.x);
 
 		panel.anchoredPosition = new Vector2 ((startButton - 1) * -300, 0f);
+
+		Time.timeScale = 1f;
 	}
 	
 	// Update is called once per frame
@@ -51,37 +53,46 @@ public class ScrollRectSnap : MonoBehaviour
 		for (int a = 0; a < bttn.Length; a++) {
 			if (minDistance == distance [a]) {
 				minButtonNum = a;
+				bttn [a].transform.localScale = new Vector2 (1.5f, 1.5f);
+
+			} else {
+				bttn [a].transform.localScale = new Vector2 (1f, 1f);
+
+				Text textBtn = bttn [a].GetComponentInChildren<Text> ();
+				if (int.Parse (textBtn.text) > 4) {
+					textBtn.color = Color.grey;
+				}
 			}
 		}
 
 		if (!dragging) {
+			
 			LerpToBttn (minButtonNum * -bttnDistance);
 
 			//Button center
 //			bttn [minButtonNum].GetComponent<RectTransform> ().sizeDelta = new Vector2 (bttn [minButtonNum].GetComponent<RectTransform> ().sizeDelta.x + 0.5f, bttn [minButtonNum].GetComponent<RectTransform> ().sizeDelta.y + 0.5f);
-				
-//			Button btn = bttn [i].GetComponent<Button> ();
-			bttn [minButtonNum].onClick.AddListener (() => {
-				ChangeSence (bttn [minButtonNum].name);
-			});
 
+			for (int a = 0; a < bttn.Length; a++) {
+				bttn [a].onClick.RemoveAllListeners ();
+			}
+			bttn [minButtonNum].onClick.AddListener (() => {
+				ChangeToSence (bttn [minButtonNum]);
+			});
 		}
 	}
 
 	void LerpToBttn (int position)
 	{
-		float newX = Mathf.Lerp (panel.anchoredPosition.x, position, Time.deltaTime * 5f);
+		print ("Update -> LerpToBtnn: " + (minButtonNum * -bttnDistance));
+		print ("panel.anchoredPosition.x: " + (panel.anchoredPosition.x));
+		print ("Time.deltaTime * 5f: " + (Time.deltaTime * 5f));
 
-		//zoom
-		if ((Mathf.Abs (newX) >= Mathf.Abs (position) - 1f) && (Mathf.Abs (newX) <= Mathf.Abs (position) + 1f) && !isButtonSelected) {
+		float newX = Mathf.Lerp (panel.anchoredPosition.x, position, Time.deltaTime * 15f);
 
-//			img.SetActive (true);
-//			bttn [minButtonNum].GetComponent<RectTransform> ().sizeDelta = new Vector2 (bttn [minButtonNum].GetComponent<RectTransform> ().sizeDelta.x * 1.5f,
-//				bttn [minButtonNum].GetComponent<RectTransform> ().sizeDelta.y * 1.5f);
-			
+		////zoom
+		if ((Mathf.Abs (newX) >= Mathf.Abs (position) - 1f) && (Mathf.Abs (newX) <= Mathf.Abs (position) + 1f) && !isButtonSelected) {			
 			isButtonSelected = true;
-
-			Debug.Log (bttn [minButtonNum].name);
+//			Debug.Log (bttn [minButtonNum].name);
 		}
 
 		Vector2 newPosition = new Vector2 (newX, panel.anchoredPosition.y);
@@ -98,12 +109,16 @@ public class ScrollRectSnap : MonoBehaviour
 	public void EndDrag ()
 	{
 		dragging = false;
+		print ("End Dragggggggg");
 	}
 
-	void ChangeSence (string buttonName)
+	void ChangeToSence (Button buttonCenter)
 	{
-		string[] arrBttnName = buttonName.Split ("_" [0]);
+		Text textBtn = buttonCenter.GetComponentInChildren<Text> ();
+		if (int.Parse (textBtn.text) <= 4) {
+			string[] arrBttnName = buttonCenter.name.Split ("_" [0]);
 
-		SceneManager.LoadScene ("GP_Lvl_" + arrBttnName [1]);
+			SceneManager.LoadScene ("GP_Lvl_" + arrBttnName [1]);
+		}
 	}
 }
