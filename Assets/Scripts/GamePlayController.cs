@@ -12,9 +12,9 @@ public class GamePlayController : MonoBehaviour
 
 	[SerializeField]
 	private GameObject inactivePlayer;
-	//
-	//	[SerializeField]
-	//	private Text txtScore, txtHighScore, txtPoint, txtTotalPoint;
+
+	[SerializeField]
+	private Text txtLevelSuccess;
 
 	//
 	bool isPaused = false;
@@ -179,6 +179,8 @@ public class GamePlayController : MonoBehaviour
 
 		panelSuccess.SetActive (true);
 		inactivePlayer.SetActive (false);
+
+		txtLevelSuccess.text = getNextLevel () + "";
 	}
 
 	private bool CheckExistedBall ()
@@ -199,6 +201,13 @@ public class GamePlayController : MonoBehaviour
 		for (int i = 0; i < gos.Length; i++) {
 			Destroy (gos [i]);
 		}
+	}
+
+	private int getNextLevel ()
+	{
+		string[] arrNameSceneCurrent = SceneManager.GetActiveScene ().name.Split ("_" [0]);
+
+		return (int.Parse (arrNameSceneCurrent [2]) + 1);
 	}
 }
 

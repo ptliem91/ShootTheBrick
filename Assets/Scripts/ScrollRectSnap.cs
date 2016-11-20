@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class ScrollRectSnap : MonoBehaviour
 {
-
 	//Public
 	public RectTransform panel;
 	public Button[] bttn;
@@ -83,10 +82,6 @@ public class ScrollRectSnap : MonoBehaviour
 
 	void LerpToBttn (int position)
 	{
-		print ("Update -> LerpToBtnn: " + (minButtonNum * -bttnDistance));
-		print ("panel.anchoredPosition.x: " + (panel.anchoredPosition.x));
-		print ("Time.deltaTime * 5f: " + (Time.deltaTime * 5f));
-
 		float newX = Mathf.Lerp (panel.anchoredPosition.x, position, Time.deltaTime * 15f);
 
 		////zoom
@@ -109,7 +104,6 @@ public class ScrollRectSnap : MonoBehaviour
 	public void EndDrag ()
 	{
 		dragging = false;
-		print ("End Dragggggggg");
 	}
 
 	void ChangeToSence (Button buttonCenter)

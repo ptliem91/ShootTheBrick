@@ -11,6 +11,9 @@ public class UIScript : MonoBehaviour
 	[SerializeField]
 	private GameObject panelPause, panelFailed;
 
+	[SerializeField]
+	private Text txtLevelFail;
+
 	public void PauseGameButton ()
 	{
 		Time.timeScale = 0f;
@@ -77,7 +80,8 @@ public class UIScript : MonoBehaviour
 		yield return new WaitForSeconds (1.5f);
 
 		panelFailed.SetActive (true);
-//		HiddenPlayerAndAllBalls ();
+
+		txtLevelFail.text = getNextLevel () + "";
 
 		Time.timeScale = 0f;
 	}
@@ -85,6 +89,18 @@ public class UIScript : MonoBehaviour
 	public void showPanelLevelSelect ()
 	{
 //		SceneManager.LoadScene ("GP_Lvl_Menu");
-		Application.LoadLevel (0);
+		Application.LoadLevel (1);
+	}
+
+	private int getNextLevel ()
+	{
+		string[] arrNameSceneCurrent = SceneManager.GetActiveScene ().name.Split ("_" [0]);
+
+		return (int.Parse (arrNameSceneCurrent [2]) + 1);
+	}
+
+	public void StartGame ()
+	{
+		Application.LoadLevel (1);
 	}
 }
