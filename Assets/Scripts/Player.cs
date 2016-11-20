@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*
+ Authored by Liempt - gaucuhanh - ptliem9119@gmail.com
+ Copyright 2016-11-20
+ */
+
 public class Player : MonoBehaviour
 {
 
@@ -34,6 +39,12 @@ public class Player : MonoBehaviour
 		canWalk = true;
 
 		anim.SetBool ("HAppear", true);
+
+		//Weapon effect
+		Vector3 weaponEffectScale = rocket.transform.localScale;
+		weaponEffectScale.x = 0.25f;
+		rocket.transform.localScale = weaponEffectScale;
+
 	}
 
 	void Update ()

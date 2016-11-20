@@ -3,6 +3,11 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/*
+ Authored by Liempt - gaucuhanh - ptliem9119@gmail.com
+ Copyright 2016-11-20
+ */
+
 public class ScrollRectSnap : MonoBehaviour
 {
 	//Public
@@ -32,6 +37,9 @@ public class ScrollRectSnap : MonoBehaviour
 		//Get distane between buttons
 		bttnDistance = (int)Mathf.Abs (bttn [1].GetComponent<RectTransform> ().anchoredPosition.x - bttn [0].GetComponent<RectTransform> ().anchoredPosition.x);
 
+		if (PlayerPrefs.HasKey ("CurrentLevel")) {
+			startButton = PlayerPrefs.GetInt ("CurrentLevel") + 1;
+		}
 		panel.anchoredPosition = new Vector2 ((startButton - 1) * -300, 0f);
 
 		Time.timeScale = 1f;
@@ -49,6 +57,8 @@ public class ScrollRectSnap : MonoBehaviour
 
 		float minDistance = Mathf.Min (distance);
 
+		int levelCurrent = PlayerPrefs.HasKey ("CurrentLevel") ? (PlayerPrefs.GetInt ("CurrentLevel") + 1) : 1;
+
 		for (int a = 0; a < bttn.Length; a++) {
 			if (minDistance == distance [a]) {
 				minButtonNum = a;
@@ -58,7 +68,7 @@ public class ScrollRectSnap : MonoBehaviour
 				bttn [a].transform.localScale = new Vector2 (1f, 1f);
 
 				Text textBtn = bttn [a].GetComponentInChildren<Text> ();
-				if (int.Parse (textBtn.text) > 4) {
+				if (int.Parse (textBtn.text) > levelCurrent) {
 					textBtn.color = Color.grey;
 				}
 			}
@@ -75,7 +85,7 @@ public class ScrollRectSnap : MonoBehaviour
 				bttn [a].onClick.RemoveAllListeners ();
 			}
 			bttn [minButtonNum].onClick.AddListener (() => {
-				ChangeToSence (bttn [minButtonNum]);
+				ChangeToSence (bttn [minButtonNum], levelCurrent);
 			});
 		}
 	}
@@ -106,10 +116,10 @@ public class ScrollRectSnap : MonoBehaviour
 		dragging = false;
 	}
 
-	void ChangeToSence (Button buttonCenter)
+	void ChangeToSence (Button buttonCenter, int levelCurrent)
 	{
 		Text textBtn = buttonCenter.GetComponentInChildren<Text> ();
-		if (int.Parse (textBtn.text) <= 4) {
+		if (int.Parse (textBtn.text) <= levelCurrent) {
 			string[] arrBttnName = buttonCenter.name.Split ("_" [0]);
 
 			SceneManager.LoadScene ("GP_Lvl_" + arrBttnName [1]);
