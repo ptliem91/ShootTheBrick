@@ -45,19 +45,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Ball.cs" />
-     <Compile Include="Assets\Scripts\BounceBall.cs" />
+     <Compile Include="Assets\Scripts\BallScripts\Ball.cs" />
+     <Compile Include="Assets\Scripts\BallScripts\BounceBall.cs" />
      <Compile Include="Assets\Scripts\DontDestroy.cs" />
-     <Compile Include="Assets\Scripts\EnemyControl.cs" />
      <Compile Include="Assets\Scripts\GamePlayController.cs" />
+     <Compile Include="Assets\Scripts\MovementScripts\PlayerMovementScript.cs" />
      <Compile Include="Assets\Scripts\ParticleSortingLayer.cs" />
-     <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\Rocket.cs" />
-     <Compile Include="Assets\Scripts\RocketBounce.cs" />
+     <Compile Include="Assets\Scripts\PlayerScripts\Player.cs" />
      <Compile Include="Assets\Scripts\ScrollRectSnap.cs" />
-     <Compile Include="Assets\Scripts\SpawnBalls.cs" />
+     <Compile Include="Assets\Scripts\SoulSwordScrips\SoulSwordScript.cs" />
      <Compile Include="Assets\Scripts\TapToMove.cs" />
      <Compile Include="Assets\Scripts\UIScript.cs" />
+     <Compile Include="Assets\SoundSetting.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

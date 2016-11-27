@@ -15,15 +15,10 @@ public class UIScript : MonoBehaviour
 	private Button btnPause;
 
 	[SerializeField]
-	private GameObject panelPause, panelFailed, audioOnIcon, audioOffIcon;
+	private GameObject panelPause, panelFailed;
 
 	[SerializeField]
 	private Text txtLevelFail;
-
-	void Awake ()
-	{
-		SetSoundState ();
-	}
 
 	public void PauseGameButton ()
 	{
@@ -114,29 +109,5 @@ public class UIScript : MonoBehaviour
 	{
 		Application.LoadLevel (1);
 	}
-
-	public void ToggleSound ()
-	{
-		if (PlayerPrefs.GetInt ("Muted", 0) == 0) {
-			PlayerPrefs.SetInt ("Muted", 1);
-		} else {
-			PlayerPrefs.SetInt ("Muted", 0);
-		}
-
-		SetSoundState ();
-	}
-
-	private void SetSoundState ()
-	{
-		if (PlayerPrefs.GetInt ("Muted", 0) == 0) {
-			AudioListener.volume = 1;
-			audioOffIcon.SetActive (false);
-			audioOnIcon.SetActive (true);
-
-		} else {
-			AudioListener.volume = 0;
-			audioOffIcon.SetActive (true);
-			audioOnIcon.SetActive (false);
-		}
-	}
+		
 }
