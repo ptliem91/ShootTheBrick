@@ -26,6 +26,9 @@ public class ScrollSelectSoulSword : MonoBehaviour
 
 	private bool isButtonSelected = false;
 
+	[SerializeField]
+	private GameObject[] panelGoToShop;
+
 	// Use this for initialization
 	void Awake ()
 	{
@@ -41,11 +44,10 @@ public class ScrollSelectSoulSword : MonoBehaviour
 
 		panel.anchoredPosition = new Vector2 ((startButton - 1) * -300, 0f);
 
-		for (int a = 1; a < weapons.Length; a++) {
+		for (int a = 0; a < weapons.Length; a++) {
 //			print ("Panel " + a + ":: " + GameController.instance.weapons [a]);
-			if (GameController.instance.weapons [a] == false) {
-//				panelWeapons [a].SetActive (false);
-				weapons [a].gameObject.SetActive (false);
+			if (GameController.instance.weapons [a] == true) {
+				panelGoToShop [a].SetActive (false);
 			}
 		}
 
@@ -71,10 +73,10 @@ public class ScrollSelectSoulSword : MonoBehaviour
 		for (int a = 0; a < weapons.Length; a++) {
 			if (minDistance == distance [a]) {
 				minButtonNum = a;
-				weapons [a].transform.localScale = new Vector2 (1.5f, 1.5f);
+				weapons [a].transform.localScale = new Vector2 (1f, 1f);
 
 			} else {
-				weapons [a].transform.localScale = new Vector2 (1f, 1f);
+				weapons [a].transform.localScale = new Vector2 (0.75f, 0.75f);
 			}
 		}
 
@@ -90,6 +92,11 @@ public class ScrollSelectSoulSword : MonoBehaviour
 			if (GameController.instance.weapons [minButtonNum] == true) {
 				weapons [minButtonNum].onClick.AddListener (() => {
 					SelectedWeaponAndChangeLevelScence (minButtonNum);
+				});
+
+			} else {
+				weapons [minButtonNum].onClick.AddListener (() => {
+					GoToShopMenu ();
 				});
 			}
 		}
@@ -133,5 +140,10 @@ public class ScrollSelectSoulSword : MonoBehaviour
 		if (GameController.instance.weapons [swordSelected]) {
 			SceneManager.LoadScene ("GP_Lvl_Select");
 		}
+	}
+
+	private void GoToShopMenu ()
+	{
+		SceneManager.LoadScene ("Shop_Menu");
 	}
 }

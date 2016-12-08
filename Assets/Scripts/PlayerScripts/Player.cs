@@ -100,7 +100,7 @@ public class Player : MonoBehaviour
 				}
 
 				Vector3 scale = transform.localScale;
-				scale.x = -0.55f;
+				scale.x = -0.5f;
 				transform.localScale = scale;
 
 				soulSword.transform.eulerAngles = new Vector2 (0, 0);
@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
 				}
 
 				Vector3 scale = transform.localScale;
-				scale.x = 0.55f;
+				scale.x = 0.5f;
 				transform.localScale = scale;
 
 				soulSword.transform.eulerAngles = new Vector2 (0, 180);

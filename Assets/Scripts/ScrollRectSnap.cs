@@ -129,16 +129,17 @@ public class ScrollRectSnap : MonoBehaviour
 
 	void PlaySence (Button buttonCenter, int levelCurrent)
 	{
+		print ("level current::" + levelCurrent);
+
 		LoadingScreenScript.instance.PlayLoadingScreen ();
 
 		GameController.instance.isGameStaredFromLevelMenu = true;
 		GameController.instance.currentLevel = levelCurrent;
 
 		Text textBtn = buttonCenter.GetComponentInChildren<Text> ();
-		if (int.Parse (textBtn.text) <= levelCurrent) {
-			string[] arrBttnName = buttonCenter.name.Split ("_" [0]);
 
-			SceneManager.LoadScene ("GP_Lvl_" + arrBttnName [1]);
+		if (int.Parse (textBtn.text) <= levelCurrent) {
+			SceneManager.LoadScene ("GP_Lvl_" + textBtn.text);
 		}
 	}
 }

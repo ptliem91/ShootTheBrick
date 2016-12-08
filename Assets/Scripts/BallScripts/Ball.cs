@@ -135,15 +135,15 @@ public class Ball : MonoBehaviour
 			break;
 
 		case "LargeBall":
-			forceY = 10.5f;
+			forceY = 11f;
 			break;
 
 		case "MediumBall":
-			forceY = 9f;
+			forceY = 10f;
 			break;
 
 		case "SmallBall":
-			forceY = 8f;
+			forceY = 9f;
 			break;
 
 		case "SmallestBall":

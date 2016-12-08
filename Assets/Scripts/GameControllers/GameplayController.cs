@@ -42,7 +42,7 @@ public class GameplayController : MonoBehaviour
 	private Button pauseBtn;
 
 	[SerializeField]
-	private Color[] colors;
+	private Color[] colors = new Color[4];
 
 	private float changeColorTime;
 
@@ -152,14 +152,11 @@ public class GameplayController : MonoBehaviour
 			levelTime -= Time.deltaTime;
 			levelTimerText.text = levelTime.ToString ("F0");
 
-			if (levelTime < changeColorTime) {
-				levelTimerText.color = colors [Random.Range (0, colors.Length)];
-				changeColorTime -= 5;
-			}
+			ChangeColorTimerText (levelTime);
 
 			if (levelTime <= 0) {
 				playerLives--;
-				GameController.instance.currentLevel = playerLives;
+				GameController.instance.currentLives = playerLives;
 				GameController.instance.currentScore = playerScore;
 			
 				if (playerLives <= 0) {
@@ -391,6 +388,23 @@ public class GameplayController : MonoBehaviour
 		Time.timeScale = 1f;
 	}
 
+	private void ChangeColorTimerText (float levelTime)
+	{
+		if (levelTime <= 60 && levelTime > 30) {
+			levelTimerText.color = colors [0];
+
+		} else if (levelTime <= 30 && levelTime > 20) {
+			levelTimerText.color = colors [1];
+
+		} else if (levelTime <= 20 && levelTime > 15) {
+			levelTimerText.color = colors [2];
+
+		} else if (levelTime <= 15) {
+			levelTimerText.color = colors [3];
+		}
+	}
+
+	//Ads
 	public void DontWatchAVideoAndQuit ()
 	{
 		GameController.instance.currentScore = playerScore;
