@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour
 	{
 		MakeSingleton ();
 		InitializeGameVariables ();
-		print (Application.persistentDataPath);
+//		print (Application.persistentDataPath);
 	}
 
 	void MakeSingleton ()
@@ -139,9 +139,6 @@ public class GameController : MonoBehaviour
 			weapons = data.getWeapons ();
 			achievements = data.getAchievements ();
 			collectedItems = data.getCollectedItems ();
-
-			weapons [2] = true;
-			weapons [3] = true;
 		}
 	}
 	//Initialize Game's Variables
@@ -186,11 +183,7 @@ public class GameController : MonoBehaviour
 		try {
 			BinaryFormatter bf = new BinaryFormatter ();
 
-			#if UNITY_ANDROID
-			file = File.Open ("file:///" + Application.persistentDataPath + "/CutStoneHeadDT.dat", FileMode.Open);
-			#else
 			file = File.Open (Application.persistentDataPath + "/CutStoneHeadDT.dat", FileMode.Open);
-			#endif
 
 			data = (GameData)bf.Deserialize (file);
 

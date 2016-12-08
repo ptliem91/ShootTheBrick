@@ -23,7 +23,6 @@ public class MainMenuController : MonoBehaviour
 	[SerializeField]
 	private Sprite[] fbSprites;
 
-	// Use this for initialization
 	void Start ()
 	{
 		canTouchSettingButton = true;
@@ -32,16 +31,15 @@ public class MainMenuController : MonoBehaviour
 		if (GameController.instance.isMusicOn) {
 			MusicController.instance.PlayBgMusic ();
 			musicBtn.image.sprite = musicBtnSprites [0];
+
+			AudioListener.volume = 1;
+
 		} else {
 			MusicController.instance.StopBgMusic ();
 			musicBtn.image.sprite = musicBtnSprites [1];
+
+			AudioListener.volume = 0;
 		}
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
 	}
 
 	public void SettingButton ()
@@ -80,6 +78,8 @@ public class MainMenuController : MonoBehaviour
 			GameController.instance.isMusicOn = false;
 			GameController.instance.Save ();
 
+			AudioListener.volume = 0;
+
 		} else {
 			musicBtn.image.sprite = musicBtnSprites [0];
 
@@ -87,6 +87,8 @@ public class MainMenuController : MonoBehaviour
 
 			GameController.instance.isMusicOn = true;
 			GameController.instance.Save ();
+
+			AudioListener.volume = 1;
 		}
 	}
 

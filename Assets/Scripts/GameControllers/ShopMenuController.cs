@@ -156,7 +156,7 @@ public class ShopMenuController : MonoBehaviour
 	//Ads
 	public void WatchVideoEarnCoins ()
 	{
-//		AdsController.instance.ShowChartboostVideo ();
+		UnityAdsController.instance.ShowUnityAdsRewardedGiveCoins ();
 	}
 
 	public void GiveUserRewardVideoWatched ()

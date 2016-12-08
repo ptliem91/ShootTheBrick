@@ -68,7 +68,7 @@ public class ScrollSelectSoulSword : MonoBehaviour
 
 		float minDistance = Mathf.Min (distance);
 
-		int weaponCurrent = startButton;
+//		int weaponCurrent = startButton;
 
 		for (int a = 0; a < weapons.Length; a++) {
 			if (minDistance == distance [a]) {

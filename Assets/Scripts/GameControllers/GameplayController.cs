@@ -435,7 +435,7 @@ public class GameplayController : MonoBehaviour
 
 	public void WatchVideoToEarnExtralives ()
 	{
-//		AdsController.instance.ShowUnityAds ();
+		UnityAdsController.instance.ShowUnityAdsGiveLives ();
 	}
 }
 

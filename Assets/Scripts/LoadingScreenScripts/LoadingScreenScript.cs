@@ -6,7 +6,7 @@ public class LoadingScreenScript : MonoBehaviour
 	public static LoadingScreenScript instance;
 
 	[SerializeField]
-	GameObject bgImage, nameGameText, loadingText, fadePanel;
+	private GameObject bgImage, nameGameText, loadingText, fadePanel;
 
 	[SerializeField]
 	private Animator fadeAnim;

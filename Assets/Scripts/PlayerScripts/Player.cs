@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /*
  Authored by Liempt - gaucuhanh - ptliem9119@gmail.com
@@ -166,7 +167,7 @@ public class Player : MonoBehaviour
 		float force = 0.0f;
 		var velocity = Mathf.Abs (myRigidBody.velocity.x);
 
-		float h = Input.GetAxis ("Horizontal");
+//		float h = Input.GetAxis ("Horizontal");
 
 		if (canWalk) {
 			transform.eulerAngles = new Vector2 (0, 180);
@@ -185,7 +186,7 @@ public class Player : MonoBehaviour
 		float force = 0.0f;
 		var velocity = Mathf.Abs (myRigidBody.velocity.x);
 
-		float h = Input.GetAxis ("Horizontal");
+//		float h = Input.GetAxis ("Horizontal");
 
 		if (canWalk) {
 			transform.eulerAngles = new Vector2 (0, 0);
@@ -227,7 +228,7 @@ public class Player : MonoBehaviour
 
 		yield return new WaitForSeconds (1f);
 
-		Application.LoadLevel (Application.loadedLevelName);
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 	}
 
 	void OnTriggerEnter2D (Collider2D target)
