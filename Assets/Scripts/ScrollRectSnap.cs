@@ -37,9 +37,20 @@ public class ScrollRectSnap : MonoBehaviour
 		//Get distane between buttons
 		bttnDistance = (int)Mathf.Abs (bttn [1].GetComponent<RectTransform> ().anchoredPosition.x - bttn [0].GetComponent<RectTransform> ().anchoredPosition.x);
 
-		if (PlayerPrefs.HasKey ("CurrentLevel")) {
-			startButton = PlayerPrefs.GetInt ("CurrentLevel") + 1;
+
+		bool[] levels = GameController.instance.levels;
+
+		for (int i = levels.Length - 1; i > 1; i--) {
+			if (levels [i]) {
+//				print ("i::" + i);
+				startButton = i;
+				break;
+			}
 		}
+
+//		if (PlayerPrefs.HasKey ("CurrentLevel")) {
+//			startButton = PlayerPrefs.GetInt ("CurrentLevel") + 1;
+//		}
 		panel.anchoredPosition = new Vector2 ((startButton - 1) * -300, 0f);
 
 		Time.timeScale = 1f;
@@ -57,12 +68,12 @@ public class ScrollRectSnap : MonoBehaviour
 
 		float minDistance = Mathf.Min (distance);
 
-		int levelCurrent = PlayerPrefs.HasKey ("CurrentLevel") ? (PlayerPrefs.GetInt ("CurrentLevel") + 1) : 1;
+		int levelCurrent = startButton;//PlayerPrefs.HasKey ("CurrentLevel") ? (PlayerPrefs.GetInt ("CurrentLevel") + 1) : 1;
 
 		for (int a = 0; a < bttn.Length; a++) {
 			if (minDistance == distance [a]) {
 				minButtonNum = a;
-				bttn [a].transform.localScale = new Vector2 (1.5f, 1.5f);
+				bttn [a].transform.localScale = new Vector2 (1.2f, 1.2f);
 
 			} else {
 				bttn [a].transform.localScale = new Vector2 (1f, 1f);
@@ -85,7 +96,7 @@ public class ScrollRectSnap : MonoBehaviour
 				bttn [a].onClick.RemoveAllListeners ();
 			}
 			bttn [minButtonNum].onClick.AddListener (() => {
-				ChangeToSence (bttn [minButtonNum], levelCurrent);
+				PlaySence (bttn [minButtonNum], levelCurrent);
 			});
 		}
 	}
@@ -116,8 +127,13 @@ public class ScrollRectSnap : MonoBehaviour
 		dragging = false;
 	}
 
-	void ChangeToSence (Button buttonCenter, int levelCurrent)
+	void PlaySence (Button buttonCenter, int levelCurrent)
 	{
+		LoadingScreenScript.instance.PlayLoadingScreen ();
+
+		GameController.instance.isGameStaredFromLevelMenu = true;
+		GameController.instance.currentLevel = levelCurrent;
+
 		Text textBtn = buttonCenter.GetComponentInChildren<Text> ();
 		if (int.Parse (textBtn.text) <= levelCurrent) {
 			string[] arrBttnName = buttonCenter.name.Split ("_" [0]);

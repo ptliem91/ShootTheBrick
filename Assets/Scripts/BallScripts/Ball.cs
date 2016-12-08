@@ -31,7 +31,12 @@ public class Ball : MonoBehaviour
 	// Use this for initialization
 	void Awake ()
 	{
+		if (this.gameObject.tag == "SmallBall") {
+			GameplayController.smallBallsCount++;
+		}
+
 		SetBallSpeed ();
+		InstantiateBalls ();
 	}
 	
 	// Update is called once per frame
@@ -42,21 +47,23 @@ public class Ball : MonoBehaviour
 
 	void InstantiateBalls ()
 	{
-		if (this.gameObject.tag != "SmallestBall") {
+		if (this.gameObject.tag != "SmallBall") {
 			ball1 = Instantiate (originalBall);
 			ball2 = Instantiate (originalBall);
 
-			ball1.name = originalBall.name;
-			ball2.name = originalBall.name;
+//			ball1.name = originalBall.name;
+//			ball2.name = originalBall.name;
 
 			ball1Script = ball1.GetComponent<Ball> ();
 			ball2Script = ball2.GetComponent<Ball> ();
+
+			ball1.SetActive (false);
+			ball2.SetActive (false);
 		}
 	}
 
 	void InitializeBallsAndTurnOffCurrentBall ()
 	{
-		InstantiateBalls ();
 
 		Vector3 temp = transform.position;
 
@@ -65,6 +72,9 @@ public class Ball : MonoBehaviour
 
 		ball2.transform.position = temp;
 		ball2Script.SetMoveRight (true);
+
+		ball1.SetActive (true);
+		ball2.SetActive (true);
 
 		if (gameObject.tag != "SmallBall") {
 			if (transform.position.y > 1 && transform.position.y <= 1.3f) {
@@ -80,6 +90,9 @@ public class Ball : MonoBehaviour
 		}
 
 		AudioSource.PlayClipAtPoint (explosionSound, transform.position);
+
+		GiveScoreAndCoins (this.gameObject.tag);
+
 		gameObject.SetActive (false); 
 	
 	}
@@ -164,11 +177,19 @@ public class Ball : MonoBehaviour
 
 			} else {
 				AudioSource.PlayClipAtPoint (explosionSound, transform.position);
+
+				GameplayController.instance.CountSmallBalls ();
+
 				gameObject.SetActive (false);
 			}
 
-			Destroy (particleSys, 3f);
+			Destroy (particleSys, 4f);
 		}
+
+//		if (target.tag == "Player") {
+//
+//			GameplayController.instance.PlayerDied ();
+//		}
 	}
 
 	private GameObject InitExplosionParticle ()
@@ -189,6 +210,41 @@ public class Ball : MonoBehaviour
 		default:
 			return (GameObject)Instantiate (smallestExplosionParticle, transform.position, Quaternion.identity);
 		}
+	}
+
+
+	void GiveScoreAndCoins (string objTag)
+	{
+
+		switch (objTag) {
+
+		case "LargestBall":
+			GameplayController.instance.coins += Random.Range (15, 20);
+			GameplayController.instance.playerScore += Random.Range (600, 700);
+			break;
+
+		case "LargeBall":
+			GameplayController.instance.coins += Random.Range (13, 18);
+			GameplayController.instance.playerScore += Random.Range (500, 600);
+			break;
+
+		case "MediumBall":
+			GameplayController.instance.coins += Random.Range (11, 16);
+			GameplayController.instance.playerScore += Random.Range (400, 500);
+			break;
+
+		case "SmallBall":
+			GameplayController.instance.coins += Random.Range (10, 15);
+			GameplayController.instance.playerScore += Random.Range (300, 400);
+			break;
+
+		case "SmallestBall":
+			GameplayController.instance.coins += Random.Range (9, 14);
+			GameplayController.instance.playerScore += Random.Range (200, 300);
+			break;
+
+		}
+
 	}
 
 }

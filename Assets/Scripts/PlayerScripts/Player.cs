@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /*
  Authored by Liempt - gaucuhanh - ptliem9119@gmail.com
@@ -12,7 +13,7 @@ public class Player : MonoBehaviour
 	public static Player instance;
 
 	[SerializeField]
-	private GameObject soulSword;
+	private GameObject[] weaponSwords;
 
 	[SerializeField]
 	private AudioClip shootingSound, deathSound;
@@ -36,7 +37,9 @@ public class Player : MonoBehaviour
 	private bool canWalk;
 	private bool moveLeft, moveRight;
 
-	public UIScript uiScript;
+	private Button shootBtn;
+
+	private GameObject soulSword;
 
 	// Use this for initialization
 	void Awake ()
@@ -47,18 +50,15 @@ public class Player : MonoBehaviour
 			instance = this;
 		}
 
-		myRigidBody = GetComponent<Rigidbody2D> ();
+		shootBtn = GameObject.FindGameObjectWithTag ("ShootButton").GetComponent<Button> ();
+		shootBtn.onClick.AddListener (() => PlayerAttack ());
+
 		canAttack = true;
 		canWalk = true;
 
 		animator.SetBool ("HAppear", true);
-	}
 
-	void Update ()
-	{
-		if (Input.GetMouseButtonDown (0) || Input.GetKeyDown (KeyCode.Space)) {
-			animator.SetBool ("HAppear", false);
-		}
+		soulSword = weaponSwords [GameController.instance.selectedWeapon];
 	}
 	
 	// Update is called once per frame
@@ -71,11 +71,11 @@ public class Player : MonoBehaviour
 
 	public void PlayerAttack ()
 	{
-		if (canAttack) {
+		if (canAttack && GameplayController.instance.levelInProgress) {
 			canAttack = false;
 			StartCoroutine (IEAttackAnimation ());
 
-			animator.SetBool ("HAppear", false);
+			StopAnimationAppear ();
 		}
 	}
 
@@ -87,7 +87,7 @@ public class Player : MonoBehaviour
 		float h = Input.GetAxis ("Horizontal");
 
 		if (h > 0 || h < 0) {
-			animator.SetBool ("HAppear", false);
+			StopAnimationAppear ();
 		}
 
 		if (canWalk) {
@@ -136,14 +136,16 @@ public class Player : MonoBehaviour
 
 	public void MovePlayer ()
 	{
-		if (moveLeft) {
-			print ("MovePlayer function ex:: Left ");
-			MoveLeft ();
-		}
+		if (GameplayController.instance.levelInProgress) {
+			if (moveLeft) {
+				print ("MovePlayer function ex:: Left ");
+				MoveLeft ();
+			}
 
-		if (moveRight) {
-			print ("MovePlayer function ex:: Right ");
-			MoveRight ();
+			if (moveRight) {
+				print ("MovePlayer function ex:: Right ");
+				MoveRight ();
+			}
 		}
 	}
 
@@ -161,8 +163,6 @@ public class Player : MonoBehaviour
 
 	public void MoveLeft ()
 	{ 
-		animator.SetBool ("HAppear", false);
-
 		float force = 0.0f;
 		var velocity = Mathf.Abs (myRigidBody.velocity.x);
 
@@ -182,8 +182,6 @@ public class Player : MonoBehaviour
 
 	public void MoveRight ()
 	{
-		animator.SetBool ("HAppear", false);
-
 		float force = 0.0f;
 		var velocity = Mathf.Abs (myRigidBody.velocity.x);
 
@@ -234,14 +232,12 @@ public class Player : MonoBehaviour
 
 	void OnTriggerEnter2D (Collider2D target)
 	{
-		string[] name = target.name.Split ();
-
-		if (name.Length > 1 && name [1] == "Ball") {
-			KillThePlayer ();
+		if (target.name.EndsWith ("Ball") || target.name.EndsWith ("Ball(Clone)")) {
+			StartCoroutine (IEKillThePlayer ());
 		}
 	}
 
-	void KillThePlayer ()
+	IEnumerator IEKillThePlayer ()
 	{
 		AudioSource.PlayClipAtPoint (deathSound, transform.position);
 
@@ -249,8 +245,18 @@ public class Player : MonoBehaviour
 
 		canAttack = false;
 
-		backgroundSound.Stop ();
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1.25f));
 
-		uiScript.FailedGame ();
+		GameplayController.instance.PlayerDied ();
+	}
+
+	public void StopAnimationAppear ()
+	{
+		animator.SetBool ("HAppear", false);
+	}
+
+	public void PlayAnimationAppear ()
+	{
+		animator.SetBool ("HAppear", true);
 	}
 }

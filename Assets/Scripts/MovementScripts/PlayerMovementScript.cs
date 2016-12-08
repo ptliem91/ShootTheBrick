@@ -7,7 +7,7 @@ public class PlayerMovementScript : MonoBehaviour, IPointerDownHandler, IPointer
 
 	public void OnPointerDown (PointerEventData data)
 	{
-		print ("OnPointerDown");
+		Player.instance.StopAnimationAppear ();
 
 		if (this.gameObject.tag == "MoveLeftButton") {
 			Player.instance.MovePlayerLeft ();
@@ -18,7 +18,7 @@ public class PlayerMovementScript : MonoBehaviour, IPointerDownHandler, IPointer
 
 	public void OnPointerUp (PointerEventData data)
 	{
-		print ("OnPointerUp");
+		Player.instance.StopAnimationAppear ();
 
 		Player.instance.StopMoving ();
 	}

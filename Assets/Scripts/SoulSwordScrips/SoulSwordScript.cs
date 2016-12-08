@@ -8,7 +8,7 @@ using System.Collections;
 
 public class SoulSwordScript : MonoBehaviour
 {
-	private float soulSpeed = 6f;
+	private float soulSpeed = 9f;
 
 	private bool canCutStickySword;
 
@@ -46,7 +46,9 @@ public class SoulSwordScript : MonoBehaviour
 	void OnTriggerEnter2D (Collider2D target)
 	{
 		if (target.tag == "TopBrick") {
+//			print ("Brick::" + target.tag);
 			if (this.gameObject.tag == "SwordSticky") {
+//				print ("SoulWord::" + target.tag);
 				canCutStickySword = false;
 
 				Vector3 targetPos = target.transform.position;

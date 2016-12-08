@@ -45,14 +45,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CutStoneHeadResources.cs" />
+     <Compile Include="Assets\Navigate.cs" />
      <Compile Include="Assets\Scripts\BallScripts\Ball.cs" />
      <Compile Include="Assets\Scripts\BallScripts\BounceBall.cs" />
      <Compile Include="Assets\Scripts\DontDestroy.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\AdsController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\GameController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\GameplayController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\LevelController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\MainMenuController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\MusicController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\PlayerMenuController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\ShopMenuController.cs" />
+     <Compile Include="Assets\Scripts\GameControllers\SocialMediaController.cs" />
      <Compile Include="Assets\Scripts\GamePlayController.cs" />
+     <Compile Include="Assets\Scripts\LoadingScreenScripts\LoadingScreenScript.cs" />
      <Compile Include="Assets\Scripts\MovementScripts\PlayerMovementScript.cs" />
+     <Compile Include="Assets\Scripts\MyCoroutine\MyCoroutine.cs" />
      <Compile Include="Assets\Scripts\ParticleSortingLayer.cs" />
      <Compile Include="Assets\Scripts\PlayerScripts\Player.cs" />
      <Compile Include="Assets\Scripts\ScrollRectSnap.cs" />
+     <Compile Include="Assets\Scripts\SoulSwordScrips\ScrollSelectSoulSword.cs" />
      <Compile Include="Assets\Scripts\SoulSwordScrips\SoulSwordScript.cs" />
      <Compile Include="Assets\Scripts\TapToMove.cs" />
      <Compile Include="Assets\Scripts\UIScript.cs" />
