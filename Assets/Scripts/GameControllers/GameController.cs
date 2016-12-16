@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour
 
 	public int currentScore;
 
-	public int currentLives;
+	//	public int currentLives;
 
 	public bool isGameStartedFirstTime;
 
@@ -35,11 +35,14 @@ public class GameController : MonoBehaviour
 	public bool[] achievements;
 	public bool[] collectedItems;
 
+	public DateTime dateTimeForPostingOnFacebook;
+	public DateTime dateTimeForWatchVideoAds;
+
 	void Awake ()
 	{
 		MakeSingleton ();
 		InitializeGameVariables ();
-//		print (Application.persistentDataPath);
+		print (Application.persistentDataPath);
 	}
 
 	void MakeSingleton ()
@@ -72,6 +75,9 @@ public class GameController : MonoBehaviour
 
 			isGameStartedFirstTime = false;
 			isMusicOn = false;
+
+			dateTimeForPostingOnFacebook = new DateTime ();
+			dateTimeForWatchVideoAds = new DateTime ();
 
 			players = new bool[6];
 			levels = new bool[40];
@@ -119,6 +125,8 @@ public class GameController : MonoBehaviour
 			data.setAchievements (achievements);
 			data.setCollectedItems (collectedItems);
 
+			data.setDateTimeForPostingOnFacebook (dateTimeForPostingOnFacebook);
+
 			Save ();
 
 			Load ();
@@ -139,6 +147,9 @@ public class GameController : MonoBehaviour
 			weapons = data.getWeapons ();
 			achievements = data.getAchievements ();
 			collectedItems = data.getCollectedItems ();
+
+			dateTimeForPostingOnFacebook = data.getDateTimeForPostingOnFacebook ();
+			dateTimeForWatchVideoAds = data.getDateTimeForWatchVideoAds ();
 		}
 	}
 	//Initialize Game's Variables
@@ -162,6 +173,9 @@ public class GameController : MonoBehaviour
 				data.setIsMusicOn (isMusicOn);
 				data.setAchievements (achievements);
 				data.setCollectedItems (collectedItems);
+
+				data.setDateTimeForPostingOnFacebook (dateTimeForPostingOnFacebook);
+				data.setDateTimeForWatchVideoAds (dateTimeForWatchVideoAds);
 
 				bf.Serialize (file, data);
 			}
@@ -218,6 +232,10 @@ class GameData
 	private bool[] weapons;
 	private bool[] achievements;
 	private bool[] collectedItems;
+
+	private DateTime dateTimeForPostingOnFacebook;
+	private DateTime dateTimeForWatchVideoAds;
+
 
 	//IsGameStartedFirstTime
 	public void setIsGameStartedFirstTime (bool isGameStartedFirstTime)
@@ -349,6 +367,28 @@ class GameData
 	public bool[] getCollectedItems ()
 	{
 		return this.collectedItems;
+	}
+
+	//
+	public void setDateTimeForPostingOnFacebook (DateTime dateTimeForPostingOnFacebook)
+	{
+		this.dateTimeForPostingOnFacebook = dateTimeForPostingOnFacebook;
+	}
+
+	public DateTime getDateTimeForPostingOnFacebook ()
+	{
+		return this.dateTimeForPostingOnFacebook;
+	}
+
+	//
+	public void setDateTimeForWatchVideoAds (DateTime dateTimeForWatchVideoAds)
+	{
+		this.dateTimeForWatchVideoAds = dateTimeForWatchVideoAds;
+	}
+
+	public DateTime getDateTimeForWatchVideoAds ()
+	{
+		return this.dateTimeForWatchVideoAds;
 	}
 }
 //Game Data

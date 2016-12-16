@@ -12,10 +12,10 @@ public class ScrollRectSnap : MonoBehaviour
 {
 	//Public
 	public RectTransform panel;
-	public Button[] bttn;
 	public RectTransform center;
 	public int startButton = 1;
-	//	public GameObject img;
+	public Button prefabButton;
+	public int numLevelButton;
 
 	//Private
 	public float[] distance;
@@ -25,14 +25,46 @@ public class ScrollRectSnap : MonoBehaviour
 	private int bttnDistance;
 	private int minButtonNum;
 
+	private Button[] bttn;
+
 	private bool isButtonSelected = false;
 
 	// Use this for initialization
 	void Awake ()
 	{
-		int bttnLenght = bttn.Length;
+		//
+		int bttnLenght = numLevelButton;
 		distance = new float[bttnLenght];
 		distReposition = new float[bttnLenght];
+
+		//
+		bttn = new Button[bttnLenght];
+
+		//generate level button
+		int positionXLvlButon = 0;
+		for (int i = 1; i <= numLevelButton; i++) {
+			Button lvlButton = (Button)UnityEngine.Object.Instantiate (prefabButton);
+
+			lvlButton.transform.SetParent (panel, false);
+			lvlButton.name = "Button_" + i;
+
+			Vector2 temp = panel.anchoredPosition;
+			temp.x = positionXLvlButon;
+			temp.y = -50;
+
+			lvlButton.transform.localPosition = new Vector3 (temp.x, temp.y, 0);
+
+			Text textLvlButton = lvlButton.GetComponentInChildren<Text> ();
+			textLvlButton.text = "" + i;
+			if (i > 9) {
+				textLvlButton.fontSize = 180;
+			}
+
+			positionXLvlButon += 300;
+
+			bttn [i - 1] = lvlButton;
+		}
+		//
 
 		//Get distane between buttons
 		bttnDistance = (int)Mathf.Abs (bttn [1].GetComponent<RectTransform> ().anchoredPosition.x - bttn [0].GetComponent<RectTransform> ().anchoredPosition.x);
@@ -41,16 +73,14 @@ public class ScrollRectSnap : MonoBehaviour
 		bool[] levels = GameController.instance.levels;
 
 		for (int i = levels.Length - 1; i > 1; i--) {
-			if (levels [i]) {
-//				print ("i::" + i);
+			if (GameController.instance.currentLevel != -1) {
+				startButton = GameController.instance.currentLevel;
+
+			} else if (levels [i]) {
 				startButton = i;
 				break;
 			}
 		}
-
-//		if (PlayerPrefs.HasKey ("CurrentLevel")) {
-//			startButton = PlayerPrefs.GetInt ("CurrentLevel") + 1;
-//		}
 		panel.anchoredPosition = new Vector2 ((startButton - 1) * -300, 0f);
 
 		Time.timeScale = 1f;
@@ -68,18 +98,25 @@ public class ScrollRectSnap : MonoBehaviour
 
 		float minDistance = Mathf.Min (distance);
 
-		int levelCurrent = startButton;//PlayerPrefs.HasKey ("CurrentLevel") ? (PlayerPrefs.GetInt ("CurrentLevel") + 1) : 1;
+		int maxLevelActived = startButton;
+		bool[] levels = GameController.instance.levels;
+		for (int i = levels.Length - 1; i > 1; i--) {
+			if (levels [i]) {
+				maxLevelActived = i;
+				break;
+			}
+		}
 
 		for (int a = 0; a < bttn.Length; a++) {
 			if (minDistance == distance [a]) {
 				minButtonNum = a;
-				bttn [a].transform.localScale = new Vector2 (1.2f, 1.2f);
+				bttn [a].transform.localScale = new Vector2 (1.6f, 1.6f);
 
 			} else {
 				bttn [a].transform.localScale = new Vector2 (1f, 1f);
 
 				Text textBtn = bttn [a].GetComponentInChildren<Text> ();
-				if (int.Parse (textBtn.text) > levelCurrent) {
+				if (int.Parse (textBtn.text) > maxLevelActived) {
 					textBtn.color = Color.grey;
 				}
 			}
@@ -95,8 +132,9 @@ public class ScrollRectSnap : MonoBehaviour
 			for (int a = 0; a < bttn.Length; a++) {
 				bttn [a].onClick.RemoveAllListeners ();
 			}
+
 			bttn [minButtonNum].onClick.AddListener (() => {
-				PlaySence (bttn [minButtonNum], levelCurrent);
+				PlaySence (bttn [minButtonNum], maxLevelActived);
 			});
 		}
 	}
@@ -127,19 +165,24 @@ public class ScrollRectSnap : MonoBehaviour
 		dragging = false;
 	}
 
-	void PlaySence (Button buttonCenter, int levelCurrent)
+	void PlaySence (Button buttonCenter, int maxLevelActived)
 	{
-		print ("level current::" + levelCurrent);
-
-		LoadingScreenScript.instance.PlayLoadingScreen ();
-
-		GameController.instance.isGameStaredFromLevelMenu = true;
-		GameController.instance.currentLevel = levelCurrent;
-
 		Text textBtn = buttonCenter.GetComponentInChildren<Text> ();
+		int lvlSelected = int.Parse (textBtn.text);
 
-		if (int.Parse (textBtn.text) <= levelCurrent) {
-			SceneManager.LoadScene ("GP_Lvl_" + textBtn.text);
+		if (lvlSelected == 40) {
+			lvlSelected = 1;
+		}
+
+		print ("level current::" + lvlSelected);
+
+		if (lvlSelected <= maxLevelActived) {
+			LoadingScreenScript.instance.PlayLoadingScreen ();
+
+			GameController.instance.isGameStaredFromLevelMenu = true;
+			GameController.instance.currentLevel = lvlSelected;
+
+			SceneManager.LoadScene ("GP_Lvl_" + lvlSelected.ToString ());
 		}
 	}
 }

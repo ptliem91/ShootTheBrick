@@ -26,7 +26,11 @@ public class Ball : MonoBehaviour
 	private AudioClip impactSound, explosionSound;
 
 	[SerializeField]
-	private GameObject largestExplosionParticle, largeExplosionParticle, mediumExplosionParticle, smallExplosionParticle, smallestExplosionParticle;
+	private GameObject explosionParticleStone;
+	//	private GameObject largestExplosionParticle, largeExplosionParticle, mediumExplosionParticle, smallExplosionParticle, smallestExplosionParticle;
+
+	[SerializeField]
+	private GameObject coin;
 
 	// Use this for initialization
 	void Awake ()
@@ -143,11 +147,11 @@ public class Ball : MonoBehaviour
 			break;
 
 		case "SmallBall":
-			forceY = 9f;
+			forceY = 12f;
 			break;
 
 		case "SmallestBall":
-			forceY = 7f;
+			forceY = 12f;
 			break;
 		}
 	}
@@ -169,47 +173,48 @@ public class Ball : MonoBehaviour
 			AudioSource.PlayClipAtPoint (impactSound, transform.position);
 		}
 
-		if (target.tag == "SoulSword" || target.tag == "SwordSticky") {
+		if (target.tag.Equals ("SoulSword") || target.tag.Equals ("SwordSticky")) {
 			GameObject particleSys = InitExplosionParticle ();
 
-			if (gameObject.tag != "SmallBall") {
+			if (Random.Range (1, 10) % 3 == 0) {
+				GameObject coinGe = (GameObject)Instantiate (coin, transform.position, Quaternion.identity);
+				Destroy (coinGe, 7f);
+			}
+
+			if (!gameObject.tag.Equals ("SmallBall")) {
 				InitializeBallsAndTurnOffCurrentBall ();
 
 			} else {
-				AudioSource.PlayClipAtPoint (explosionSound, transform.position);
-
 				GameplayController.instance.CountSmallBalls ();
+
+				AudioSource.PlayClipAtPoint (explosionSound, transform.position);
 
 				gameObject.SetActive (false);
 			}
 
 			Destroy (particleSys, 4f);
 		}
-
-//		if (target.tag == "Player") {
-//
-//			GameplayController.instance.PlayerDied ();
-//		}
 	}
 
 	private GameObject InitExplosionParticle ()
 	{
-		switch (this.gameObject.tag) {
-		case "LargestBall":
-			return (GameObject)Instantiate (largestExplosionParticle, transform.position, Quaternion.identity);
-
-		case "LargeBall":
-			return (GameObject)Instantiate (largeExplosionParticle, transform.position, Quaternion.identity);
-
-		case "MediumBall":
-			return (GameObject)Instantiate (mediumExplosionParticle, transform.position, Quaternion.identity);
-
-		case "SmallBall":
-			return (GameObject)Instantiate (smallExplosionParticle, transform.position, Quaternion.identity);
-
-		default:
-			return (GameObject)Instantiate (smallestExplosionParticle, transform.position, Quaternion.identity);
-		}
+//		switch (this.gameObject.tag) {
+//		case "LargestBall":
+//			return (GameObject)Instantiate (largestExplosionParticle, transform.position, Quaternion.identity);
+//
+//		case "LargeBall":
+//			return (GameObject)Instantiate (largeExplosionParticle, transform.position, Quaternion.identity);
+//
+//		case "MediumBall":
+//			return (GameObject)Instantiate (mediumExplosionParticle, transform.position, Quaternion.identity);
+//
+//		case "SmallBall":
+//			return (GameObject)Instantiate (smallExplosionParticle, transform.position, Quaternion.identity);
+//
+//		default:
+//			return (GameObject)Instantiate (mediumExplosionParticle, transform.position, Quaternion.identity);
+//		}
+		return (GameObject)Instantiate (explosionParticleStone, transform.position, Quaternion.identity);
 	}
 
 
@@ -219,27 +224,27 @@ public class Ball : MonoBehaviour
 		switch (objTag) {
 
 		case "LargestBall":
-			GameplayController.instance.coins += Random.Range (15, 20);
+//			GameplayController.instance.coins += Random.Range (15, 20);
 			GameplayController.instance.playerScore += Random.Range (600, 700);
 			break;
 
 		case "LargeBall":
-			GameplayController.instance.coins += Random.Range (13, 18);
+//			GameplayController.instance.coins += Random.Range (13, 18);
 			GameplayController.instance.playerScore += Random.Range (500, 600);
 			break;
 
 		case "MediumBall":
-			GameplayController.instance.coins += Random.Range (11, 16);
+//			GameplayController.instance.coins += Random.Range (11, 16);
 			GameplayController.instance.playerScore += Random.Range (400, 500);
 			break;
 
 		case "SmallBall":
-			GameplayController.instance.coins += Random.Range (10, 15);
+//			GameplayController.instance.coins += Random.Range (10, 15);
 			GameplayController.instance.playerScore += Random.Range (300, 400);
 			break;
 
 		case "SmallestBall":
-			GameplayController.instance.coins += Random.Range (9, 14);
+//			GameplayController.instance.coins += Random.Range (9, 14);
 			GameplayController.instance.playerScore += Random.Range (200, 300);
 			break;
 

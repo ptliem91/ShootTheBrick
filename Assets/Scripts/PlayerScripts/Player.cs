@@ -20,9 +20,6 @@ public class Player : MonoBehaviour
 	private AudioClip shootingSound, deathSound;
 
 	[SerializeField]
-	private AudioSource backgroundSound;
-
-	[SerializeField]
 	private Animator animator;
 
 	[SerializeField]
@@ -42,6 +39,11 @@ public class Player : MonoBehaviour
 
 	private GameObject soulSword;
 
+	[SerializeField]
+	private GameObject explosionParticleDeath;
+
+	private float timeWaitToAttack = 0.4f;
+
 	// Use this for initialization
 	void Awake ()
 	{
@@ -60,6 +62,15 @@ public class Player : MonoBehaviour
 		animator.SetBool ("HAppear", true);
 
 		soulSword = weaponSwords [GameController.instance.selectedWeapon];
+		if (soulSword.name.Equals ("DoubleSwords")) {
+			timeWaitToAttack += 0.3f;
+
+		} else if (soulSword.name.Equals ("TripleSwords")) {
+			timeWaitToAttack += 0.9f;
+
+		} else if (soulSword.name.Equals ("HarpoonChain")) {
+			timeWaitToAttack += 1.2f;
+		}
 	}
 	
 	// Update is called once per frame
@@ -101,7 +112,7 @@ public class Player : MonoBehaviour
 				}
 
 				Vector3 scale = transform.localScale;
-				scale.x = -0.5f;
+				scale.x = -0.45f;
 				transform.localScale = scale;
 
 				soulSword.transform.eulerAngles = new Vector2 (0, 0);
@@ -115,7 +126,7 @@ public class Player : MonoBehaviour
 				}
 
 				Vector3 scale = transform.localScale;
-				scale.x = 0.5f;
+				scale.x = 0.45f;
 				transform.localScale = scale;
 
 				soulSword.transform.eulerAngles = new Vector2 (0, 180);
@@ -207,10 +218,27 @@ public class Player : MonoBehaviour
 		animator.Play ("Sk_Attack");
 
 		Vector3 temp = transform.position;
-		temp.y += 1.5f;
-		temp.x += 0.6f;
 
-		Instantiate (soulSword, temp, Quaternion.identity);
+
+		Instantiate (soulSword, transform.position, Quaternion.identity);
+		if (soulSword.name.Equals ("DoubleSwords")) {
+			temp.x += 1f;
+
+			Instantiate (soulSword, temp, Quaternion.identity);
+
+			temp = transform.position;
+
+		} else if (soulSword.name.Equals ("TripleSwords")) {
+			temp.x += 1f;
+
+			Instantiate (soulSword, temp, Quaternion.identity);
+
+			temp.x -= 2f;
+
+			Instantiate (soulSword, temp, Quaternion.identity);
+
+			temp = transform.position;
+		}
 
 		AudioSource.PlayClipAtPoint (shootingSound, transform.position);
 
@@ -218,7 +246,8 @@ public class Player : MonoBehaviour
 		animator.SetBool ("HShooting", false);
 		canWalk = true;
 
-		yield return new WaitForSeconds (0.3f);
+		yield return new WaitForSeconds (timeWaitToAttack);
+
 		canAttack = true;
 	}
 
@@ -233,22 +262,29 @@ public class Player : MonoBehaviour
 
 	void OnTriggerEnter2D (Collider2D target)
 	{
-		if (target.name.EndsWith ("Ball") || target.name.EndsWith ("Ball(Clone)")) {
+		if (target.tag.EndsWith ("Ball")) {
 			StartCoroutine (IEKillThePlayer ());
 		}
 	}
 
 	IEnumerator IEKillThePlayer ()
 	{
-		AudioSource.PlayClipAtPoint (deathSound, transform.position);
-
-		animator.Play ("Sk_Died");
+		InitExplosionParticle ();
+		animator.SetBool ("HDied", true);
 
 		canAttack = false;
+		canWalk = false;
+		shootBtn.onClick.RemoveAllListeners ();
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1.25f));
+		AudioSource.PlayClipAtPoint (deathSound, transform.position);
+
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.75f));
 
 		GameplayController.instance.PlayerDied ();
+
+		canAttack = true;
+		canWalk = true;
+		shootBtn.onClick.AddListener (() => PlayerAttack ());
 	}
 
 	public void StopAnimationAppear ()
@@ -259,5 +295,10 @@ public class Player : MonoBehaviour
 	public void PlayAnimationAppear ()
 	{
 		animator.SetBool ("HAppear", true);
+	}
+
+	private GameObject InitExplosionParticle ()
+	{
+		return (GameObject)Instantiate (explosionParticleDeath, transform.position, Quaternion.identity);
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -7,7 +8,8 @@ public class ShopMenuController : MonoBehaviour
 {
 	public static ShopMenuController instance;
 
-	public Text coinText, scoreText, buyArrowsText, watchVideoText;
+	public Text coinText, buyArrowsText, watchVideoText, messageText;
+	//scoreText,
 
 	public Button weaponsTabBtn, earnCoinTabBtn, yesBtn;
 
@@ -34,15 +36,15 @@ public class ShopMenuController : MonoBehaviour
 	void InitializeShopMenuController ()
 	{
 		coinText.text = "" + GameController.instance.coins;
-		scoreText.text = "" + GameController.instance.highScore;
+//		scoreText.text = "" + GameController.instance.highScore;
 	}
 
 	public void BuyDoubleArrows ()
 	{
 		if (!GameController.instance.weapons [1]) {
-			if (GameController.instance.coins >= 7000) {
+			if (GameController.instance.coins >= 3000) {
 				buyArrowsPanel.SetActive (true);
-				buyArrowsText.text = "Do you want to purchase Double Arrows ?";
+				buyArrowsText.text = "Do you want to purchase Double Swords ?";
 				yesBtn.onClick.RemoveAllListeners ();
 				yesBtn.onClick.AddListener (() => BuyArrow (1));
 
@@ -58,9 +60,9 @@ public class ShopMenuController : MonoBehaviour
 	public void BuyStickyArrows ()
 	{
 		if (!GameController.instance.weapons [2]) {
-			if (GameController.instance.coins >= 7000) {
+			if (GameController.instance.coins >= 5000) {
 				buyArrowsPanel.SetActive (true);
-				buyArrowsText.text = "Do you want to purchase Double Arrows ?";
+				buyArrowsText.text = "Do you want to purchase Triple Swords ?";
 				yesBtn.onClick.RemoveAllListeners ();
 				yesBtn.onClick.AddListener (() => BuyArrow (2));
 
@@ -78,7 +80,7 @@ public class ShopMenuController : MonoBehaviour
 		if (!GameController.instance.weapons [3]) {
 			if (GameController.instance.coins >= 7000) {
 				buyArrowsPanel.SetActive (true);
-				buyArrowsText.text = "Do you want to purchase Double Arrows ?";
+				buyArrowsText.text = "Do you want to purchase Harpoon Chain ?";
 				yesBtn.onClick.RemoveAllListeners ();
 				yesBtn.onClick.AddListener (() => BuyArrow (3));
 
@@ -93,8 +95,17 @@ public class ShopMenuController : MonoBehaviour
 
 	public void BuyArrow (int index)
 	{
+		int payCoins = 3000;
+
+		if (index == 2) {
+			payCoins = 5000;
+
+		} else if (index == 3) {
+			payCoins = 7000;
+		}
+		
 		GameController.instance.weapons [index] = true;
-		GameController.instance.coins -= 7000;
+		GameController.instance.coins -= payCoins;
 		GameController.instance.Save ();
 
 		buyArrowsPanel.SetActive (false);
@@ -134,6 +145,7 @@ public class ShopMenuController : MonoBehaviour
 		weaponItemsPanel.SetActive (false);
 //		specialItemsPanel.SetActive (false);
 		earnCoinsItemsPanel.SetActive (true);
+		messageText.text = "";
 
 		buyArrowsPanel.SetActive (false);
 	}
@@ -156,20 +168,90 @@ public class ShopMenuController : MonoBehaviour
 	//Ads
 	public void WatchVideoEarnCoins ()
 	{
-		UnityAdsController.instance.ShowUnityAdsRewardedGiveCoins ();
+		int day = DateTime.Now.Day - GameController.instance.dateTimeForWatchVideoAds.Day;
+
+		if (day >= 1) {
+			//watch
+			UnityAdsController.instance.ShowUnityAdsRewardedGiveCoins ();
+
+		} else {
+			TimeSpan time = DateTime.Now.TimeOfDay - GameController.instance.dateTimeForWatchVideoAds.TimeOfDay;
+
+			int waitTime = 10 - time.Minutes; //10 is wait time to watch video next
+
+			if (waitTime <= 0) {
+				UnityAdsController.instance.ShowUnityAdsRewardedGiveCoins ();
+
+			} else {
+				messageText.text = "You need to wait " + waitTime + " minutes to watch video.";
+			}
+		}
+
+//		UnityAdsController.instance.ShowUnityAdsRewardedGiveCoins ();
 	}
 
 	public void GiveUserRewardVideoWatched ()
 	{
 		GameController.instance.coins += 300;
+		GameController.instance.dateTimeForWatchVideoAds = DateTime.Now;
+
 		GameController.instance.Save ();
 
 		coinText.text = "" + GameController.instance.coins;
+		messageText.text = "You've received 300 coins :)";
 	}
 
-	public void FailedToLoadTheVideoAds ()
+	public void FailedToLoadTheVideoAds (String message)
 	{
-		watchVideoText.text = "Could not load video.";
+//		watchVideoText.text = "Could not load video.";
+		messageText.text = message;
+	}
+
+	//Facebook share
+	public void ShareOnFacebookButton ()
+	{
+		bool hasInternet = InternetChecker.instance.isConnected;
+
+		if (hasInternet) {
+			int day = DateTime.Now.Day - GameController.instance.dateTimeForPostingOnFacebook.Day;
+
+			if (day >= 2) {
+				//share
+				FacebookController.instance.Share ();
+			} else if (day == 1) {
+				if (DateTime.Now.Hour >= GameController.instance.dateTimeForPostingOnFacebook.Hour) {
+					//share
+					FacebookController.instance.Share ();
+				} else {
+					int waitTime = GameController.instance.dateTimeForPostingOnFacebook.Hour - DateTime.Now.Hour;
+
+					messageText.text = "You need to wait " + waitTime + " hour(s) to post.";
+				}
+			} else {
+				TimeSpan time = DateTime.Now.TimeOfDay - GameController.instance.dateTimeForPostingOnFacebook.TimeOfDay;
+				int waitTime = 24 - time.Hours;
+
+				messageText.text = "You need to wait " + waitTime + " hour(s) to post.";
+			}
+
+		} else {
+			messageText.text = "Please try again or check your network connection.";
+		}
+	}
+
+	public void PostFacebookSucceded ()
+	{
+		GameController.instance.coins += 400;
+		GameController.instance.dateTimeForPostingOnFacebook = DateTime.Now;
+		GameController.instance.Save ();
+
+		coinText.text = "" + GameController.instance.coins;
+		messageText.text = "Thank you for Sharing on Facebook. You've received 400 coins :)";
+	}
+
+	public void PostFacebookFailed ()
+	{
+		messageText.text = "Share failed. Please login facebook or check your network connection.";
 	}
 }
 

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/GP_Lvl_0.unity
+- path: Assets/Scenes/GP_Lvl_Select.unity
   isLoaded: 1
   isActive: 1

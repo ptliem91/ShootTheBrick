@@ -30,7 +30,7 @@ public class SoulSwordScript : MonoBehaviour
 
 	IEnumerator IEResetStickySword ()
 	{
-		yield return new WaitForSeconds (1f);
+		yield return new WaitForSeconds (1.5f);
 		if (this.gameObject.tag == "SwordSticky") {
 			this.gameObject.SetActive (false);
 		}
@@ -60,7 +60,7 @@ public class SoulSwordScript : MonoBehaviour
 				StartCoroutine ("IEResetStickySword");
 
 			} else {
-				Destroy (gameObject);
+				Destroy (gameObject, 3f);
 			}
 		}
 

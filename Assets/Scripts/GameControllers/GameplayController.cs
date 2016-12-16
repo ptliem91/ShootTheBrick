@@ -22,13 +22,16 @@ public class GameplayController : MonoBehaviour
 
 	public float levelTime;
 
-	public Text liveText, scoreText, levelTimerText, showScoreAtEndOfLevelText, countDownAndBeginLevelText, watchVideoText;
+	public Text scoreText, levelTimerText, showScoreAtEndOfLevelText, countDownAndBeginLevelText,
+		watchVideoText, coinsText, currentLvlText, smallBallCountText;
+	//liveText,
 
 	private float countDownBeforeLevelBegins = 2.0f;
 
 	public static int smallBallsCount = 0;
 
-	public int playerLives, playerScore, coins;
+	public int playerScore, coins;
+	//playerLives,
 
 	public bool levelInProgress;
 
@@ -46,6 +49,8 @@ public class GameplayController : MonoBehaviour
 
 	private float changeColorTime;
 
+	private GameObject skeleton;
+
 	void Awake ()
 	{
 		MakeInstance ();
@@ -62,6 +67,7 @@ public class GameplayController : MonoBehaviour
 	void Update ()
 	{
 		UpdateGameplayController ();
+		smallBallCountText.text = "" + smallBallsCount;
 	}
 
 	void MakeInstance ()
@@ -79,6 +85,7 @@ public class GameplayController : MonoBehaviour
 
 		topBrick = Instantiate (topAndBottomBricks [index]);
 		topBrick.tag = "TopBrick";
+		topBrick.GetComponent<BoxCollider2D> ().isTrigger = true;
 
 		bottomBrick = Instantiate (topAndBottomBricks [index]);
 		leftBrick = Instantiate (leftBricks [index], new Vector3 (0, 0, 0), Quaternion.Euler (new Vector3 (0, 0, -90))) as GameObject;
@@ -89,26 +96,28 @@ public class GameplayController : MonoBehaviour
 		leftBrick.transform.position = new Vector3 (-coordinates.x - 0.35f, coordinates.y, 0);
 		rightBrick.transform.position = new Vector3 (coordinates.x + 0.35f, coordinates.y, 0);
 	
-		Instantiate (players [GameController.instance.selectedPlayer]);
+		skeleton = Instantiate (players [GameController.instance.selectedPlayer]);
 	}
 
 	void InitializeGameplayController ()
 	{
 		if (GameController.instance.isGameStaredFromLevelMenu) {
 			playerScore = 0;
-			playerLives = 2;
+//			playerLives = 2;
 			GameController.instance.currentScore = playerScore;
-			GameController.instance.currentLives = playerLives;
+//			GameController.instance.currentLives = playerLives;
 			GameController.instance.isGameStaredFromLevelMenu = false;
 
 		} else {
 			playerScore = GameController.instance.currentScore;
-			playerLives = GameController.instance.currentLives;
+//			playerLives = GameController.instance.currentLives;
 		}
 
 		levelTimerText.text = levelTime.ToString ("F0");
 		scoreText.text = "Score x" + playerScore;
-		liveText.text = "" + GameController.instance.currentLives;
+//		liveText.text = "" + GameController.instance.currentLives;
+		coins = 0;
+		currentLvlText.text = "" + GameController.instance.currentLevel;
 
 		Time.timeScale = 0;
 		countDownAndBeginLevelText.text = countDownBeforeLevelBegins.ToString ("F0");
@@ -117,6 +126,7 @@ public class GameplayController : MonoBehaviour
 	void UpdateGameplayController ()
 	{
 		scoreText.text = "Score x" + playerScore;
+		coinsText.text = "" + coins;
 
 		if (hasLevelBegan) {
 			CountdownAndBeginLevel ();
@@ -155,17 +165,17 @@ public class GameplayController : MonoBehaviour
 			ChangeColorTimerText (levelTime);
 
 			if (levelTime <= 0) {
-				playerLives--;
-				GameController.instance.currentLives = playerLives;
+//				playerLives--;
+//				GameController.instance.currentLives = playerLives;
 				GameController.instance.currentScore = playerScore;
 			
-				if (playerLives <= 0) {
-					//prompt the user to watch video
-					StartCoroutine (IEPromptTheUserToWatchAVideo ());
-				} else {
-					//restart game
-					StartCoroutine (IEPlayerDiedRestartLevel ());
-				}
+//				if (playerLives <= 0) {
+				//prompt the user to watch video
+				StartCoroutine (IEPromptTheUserToWatchAVideo ());
+//				} else {
+//					//restart game
+//					StartCoroutine (IEPlayerDiedRestartLevel ());
+//				}
 			
 			} else {
 				
@@ -173,27 +183,27 @@ public class GameplayController : MonoBehaviour
 		}
 	}
 
-	IEnumerator IEPlayerDiedRestartLevel ()
-	{
-		levelInProgress = false;
-
-		coins = 0;
-		smallBallsCount = 0;
-
-		Time.timeScale = 0f;
-		//fade out
-		if (LoadingScreenScript.instance != null) {
-			LoadingScreenScript.instance.FadeOut ();
-		}
-
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.5f));
-
-		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
-
-		if (LoadingScreenScript.instance != null) {
-			LoadingScreenScript.instance.PlayFadeInAnimation ();
-		}
-	}
+	//	IEnumerator IEPlayerDiedRestartLevel ()
+	//	{
+	//		levelInProgress = false;
+	//
+	//		coins = 0;
+	//		smallBallsCount = 0;
+	//
+	//		Time.timeScale = 0f;
+	//		//fade out
+	//		if (LoadingScreenScript.instance != null) {
+	//			LoadingScreenScript.instance.FadeOut ();
+	//		}
+	//
+	//		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.5f));
+	//
+	//		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+	//
+	//		if (LoadingScreenScript.instance != null) {
+	//			LoadingScreenScript.instance.PlayFadeInAnimation ();
+	//		}
+	//	}
 
 	public void PlayerDied ()
 	{
@@ -201,19 +211,19 @@ public class GameplayController : MonoBehaviour
 		pauseBtn.interactable = false;
 		levelInProgress = false;
 
-		smallBallsCount = 0;
+//		smallBallsCount = 0;
 
-		playerLives--;
-		GameController.instance.currentLives = playerLives;
+//		playerLives--;
+//		GameController.instance.currentLives = playerLives;
 		GameController.instance.currentScore = playerScore;
 
-		if (playerLives <= 0) {
-			//prompt the user to watch video
-			StartCoroutine (IEPromptTheUserToWatchAVideo ());
-		} else {
-			//restart game
-			StartCoroutine (IEPlayerDiedRestartLevel ());
-		}
+//		if (playerLives <= 0) {
+		//prompt the user to watch video
+		StartCoroutine (IEPromptTheUserToWatchAVideo ());
+//		} else {
+//			//restart game
+//			StartCoroutine (IEPlayerDiedRestartLevel ());
+//		}
 	}
 
 	IEnumerator IELevelCompleted ()
@@ -236,10 +246,10 @@ public class GameplayController : MonoBehaviour
 			coins *= 2;
 		}
 
-		GameController.instance.coins = coins;
+		GameController.instance.coins += coins;
 		GameController.instance.Save ();
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (4f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (2.5f));
 		levelInProgress = false;
 		Player.instance.StopMoving ();
 		Time.timeScale = 0f;
@@ -257,37 +267,56 @@ public class GameplayController : MonoBehaviour
 
 		Time.timeScale = 0f;
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.8f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.5f));
 
+		watchVideoText.text = "";
 		playerDiedPanel.SetActive (true);
 	}
 
-	IEnumerator IEGivePlayerLivesAfterWatchingVideo ()
+	IEnumerator IEGivePlayerLivesAfterWatchingVideo (bool isWatchAds)
 	{
-		watchVideoText.text = "Thank you for watching. You earned 2 extra lives.";
+//		watchVideoText.text = "Thank you for watching. You earned 2 extra lives.";
+		if (isWatchAds) {
+			watchVideoText.text = "Don't give up! :)";
+		}
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (2.5f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1.5f));
 
-		coins = 0;
-		playerLives = 2;
-		smallBallsCount = 0;
+//		coins = 0;
+//		playerLives = 2;
+//		smallBallsCount = 0;
 
-		GameController.instance.currentLives = playerLives;
-		GameController.instance.currentScore = playerScore;
+//		GameController.instance.currentLives = playerLives;
+//		GameController.instance.currentScore = playerScore;
 
-		Time.timeScale = 0f;
+//		Time.timeScale = 0f;
 
 		if (LoadingScreenScript.instance != null) {
 			LoadingScreenScript.instance.FadeOut ();
 		}
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1.25f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1.5f));
 
-		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+//		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 
 		if (LoadingScreenScript.instance != null) {
 			LoadingScreenScript.instance.PlayFadeInAnimation ();
 		}
+
+		playerDiedPanel.SetActive (false);
+
+//		Vector3 position = skeleton.transform.position;
+//		skeleton = (GameObject)Instantiate (players [GameController.instance.selectedPlayer]);
+//		skeleton.transform.position = position;
+
+//		skeleton.GetComponent<Animator> ().SetBool ("HDied", false);
+//		skeleton.GetComponent<Animator> ().SetBool ("HAppear", true);
+		skeleton.GetComponent<Animator> ().SetBool ("HDied", false);
+
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (2f));
+
+		levelInProgress = true;
+		Time.timeScale = 1f;
 	}
 
 	public void CountSmallBalls ()
@@ -324,7 +353,7 @@ public class GameplayController : MonoBehaviour
 		smallBallsCount = 0;
 		coins = 0;
 
-		GameController.instance.currentLives = playerLives;
+//		GameController.instance.currentLives = playerLives;
 		GameController.instance.currentScore = playerScore;
 
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
@@ -336,7 +365,7 @@ public class GameplayController : MonoBehaviour
 
 	public void NextLevelButton ()
 	{
-		GameController.instance.currentLives = playerLives;
+//		GameController.instance.currentLives = playerLives;
 		GameController.instance.currentScore = playerScore;
 
 		if (GameController.instance.highScore < GameController.instance.currentScore) {
@@ -414,6 +443,9 @@ public class GameplayController : MonoBehaviour
 			GameController.instance.Save ();
 		}
 
+		smallBallsCount = 0;
+//		skeleton.GetComponent<Animator> ().Play ("Sk_Died");
+
 		Time.timeScale = 1f;
 
 		SceneManager.LoadScene ("GP_Lvl_Select");
@@ -428,14 +460,31 @@ public class GameplayController : MonoBehaviour
 		watchVideoText.text = message;
 	}
 
-	public void VideoWatchedGivePlayerLives ()
+	public void VideoWatchedGivePlayerLives (bool isWatchAds)
 	{
-		StartCoroutine (IEGivePlayerLivesAfterWatchingVideo ());
+		StartCoroutine (IEGivePlayerLivesAfterWatchingVideo (isWatchAds));
 	}
 
 	public void WatchVideoToEarnExtralives ()
 	{
-		UnityAdsController.instance.ShowUnityAdsGiveLives ();
+		int numLucky = 2;//Random.Range (1, 5);
+		bool isWatchAds = (numLucky % 2 == 0);
+
+		bool hasInternet = InternetChecker.instance.isConnected;
+
+		print ("hasInternet::" + hasInternet);
+
+		if (hasInternet) {
+			if (isWatchAds) {
+				UnityAdsController.instance.ShowUnityAdsGiveLives ();
+			}
+
+//			VideoWatchedGivePlayerLives (isWatchAds);
+		
+		} else {
+			watchVideoText.text = "Please check your network connection.";
+		}
+
 	}
 }
 

@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.Advertisements;
 using System.Collections;
+using System;
 
 public class UnityAdsController : MonoBehaviour
 {
 	public static UnityAdsController instance;
 
-	private const string app_id = "1221718";
+	private const string APP_ID = "1221718";
+	private const bool TEST_MODE = false;
 
 	void Awake ()
 	{
@@ -27,9 +29,14 @@ public class UnityAdsController : MonoBehaviour
 
 	public void LoadUnityAds ()
 	{
-		if (Advertisement.isSupported) {
+		try {
+			if (Advertisement.isSupported) {
 //			Advertisement.allowPrecache = true;
-			Advertisement.Initialize (app_id, true);
+				Advertisement.Initialize (APP_ID, TEST_MODE);
+			}
+
+		} catch (Exception ex) {
+			print (ex.Message);
 		}
 	}
 
@@ -52,7 +59,7 @@ public class UnityAdsController : MonoBehaviour
 			});
 	
 		} else {
-			GameplayController.instance.VideoNotLoadedOrUserSkippedTheVideo ("Failed to load video. Please try again or check your network.");
+			GameplayController.instance.VideoNotLoadedOrUserSkippedTheVideo ("Failed to load video. Please try again or check your network connection.");
 			LoadUnityAds ();
 		}
 	}
@@ -61,17 +68,18 @@ public class UnityAdsController : MonoBehaviour
 	{
 		switch (result) {
 		case ShowResult.Finished:
-			GameplayController.instance.VideoWatchedGivePlayerLives ();
+			GameplayController.instance.VideoWatchedGivePlayerLives (true);
 			LoadUnityAds ();
 			break;
 	
 		case ShowResult.Failed:
-			GameplayController.instance.VideoNotLoadedOrUserSkippedTheVideo ("Failed to load video. Please try again or check your network.");
+			GameplayController.instance.VideoNotLoadedOrUserSkippedTheVideo ("Failed to load video. Please try again or check your network connection.");
 			LoadUnityAds ();
 			break;
 	
 		case ShowResult.Skipped:
-			GameplayController.instance.VideoNotLoadedOrUserSkippedTheVideo ("Video skipped. No lives earned.");
+//			GameplayController.instance.VideoNotLoadedOrUserSkippedTheVideo ("Video skipped.");
+			GameplayController.instance.VideoWatchedGivePlayerLives (true);
 			LoadUnityAds ();
 			break;
 		}
@@ -86,12 +94,12 @@ public class UnityAdsController : MonoBehaviour
 			break;
 
 		case ShowResult.Skipped:
-			ShopMenuController.instance.FailedToLoadTheVideoAds ();
+			ShopMenuController.instance.FailedToLoadTheVideoAds ("Video skipped. No earn coins.");
 			LoadUnityAds ();
 			break;
 
 		case ShowResult.Failed:
-			ShopMenuController.instance.FailedToLoadTheVideoAds ();
+			ShopMenuController.instance.FailedToLoadTheVideoAds ("Failed to load video. Please try again or check your network connection.");
 			LoadUnityAds ();
 			break;
 		}

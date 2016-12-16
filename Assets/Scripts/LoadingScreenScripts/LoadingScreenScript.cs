@@ -46,7 +46,7 @@ public class LoadingScreenScript : MonoBehaviour
 			GameplayController.instance.setHasLevelBegan (true);
 		}
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.7f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.5f));
 		fadePanel.SetActive (false);
 	}
 
