@@ -8,7 +8,7 @@ public class UnityAdsController : MonoBehaviour
 	public static UnityAdsController instance;
 
 	private const string APP_ID = "1221718";
-	private const bool TEST_MODE = false;
+	private const bool TEST_MODE = true;
 
 	void Awake ()
 	{

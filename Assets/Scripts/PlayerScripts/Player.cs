@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
 				}
 
 				Vector3 scale = transform.localScale;
-				scale.x = -0.45f;
+				scale.x = -0.4f;
 				transform.localScale = scale;
 
 				soulSword.transform.eulerAngles = new Vector2 (0, 0);
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
 				}
 
 				Vector3 scale = transform.localScale;
-				scale.x = 0.45f;
+				scale.x = 0.4f;
 				transform.localScale = scale;
 
 				soulSword.transform.eulerAngles = new Vector2 (0, 180);
@@ -251,18 +251,18 @@ public class Player : MonoBehaviour
 		canAttack = true;
 	}
 
-	IEnumerator IEKillThePlayerAndRestartGame ()
-	{
-		transform.position = new Vector3 (200, 200, 0);
-
-		yield return new WaitForSeconds (1f);
-
-		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
-	}
+	//	IEnumerator IEKillThePlayerAndRestartGame ()
+	//	{
+	//		transform.position = new Vector3 (200, 200, 0);
+	//
+	//		yield return new WaitForSeconds (1f);
+	//
+	//		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+	//	}
 
 	void OnTriggerEnter2D (Collider2D target)
 	{
-		if (target.tag.EndsWith ("Ball")) {
+		if (target.tag.EndsWith ("Ball") && !target.tag.Equals ("BossBall")) {
 			StartCoroutine (IEKillThePlayer ());
 		}
 	}
@@ -272,17 +272,18 @@ public class Player : MonoBehaviour
 		InitExplosionParticle ();
 		animator.SetBool ("HDied", true);
 
-		canAttack = false;
+
 		canWalk = false;
+
+		StopMoving ();
 		shootBtn.onClick.RemoveAllListeners ();
 
 		AudioSource.PlayClipAtPoint (deathSound, transform.position);
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (.75f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (0.9f));
 
 		GameplayController.instance.PlayerDied ();
 
-		canAttack = true;
 		canWalk = true;
 		shootBtn.onClick.AddListener (() => PlayerAttack ());
 	}

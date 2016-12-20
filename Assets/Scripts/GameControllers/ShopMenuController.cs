@@ -15,6 +15,10 @@ public class ShopMenuController : MonoBehaviour
 
 	public GameObject weaponItemsPanel, earnCoinsItemsPanel, buyArrowsPanel;
 
+	private const int priceDoubleSwords = 4000;
+	private const int priceTripleSwords = 7000;
+	private const int priceHarpoonChain = 9000;
+
 	void Awake ()
 	{
 		MakeInstance ();
@@ -42,7 +46,7 @@ public class ShopMenuController : MonoBehaviour
 	public void BuyDoubleArrows ()
 	{
 		if (!GameController.instance.weapons [1]) {
-			if (GameController.instance.coins >= 3000) {
+			if (GameController.instance.coins >= priceDoubleSwords) {
 				buyArrowsPanel.SetActive (true);
 				buyArrowsText.text = "Do you want to purchase Double Swords ?";
 				yesBtn.onClick.RemoveAllListeners ();
@@ -60,7 +64,7 @@ public class ShopMenuController : MonoBehaviour
 	public void BuyStickyArrows ()
 	{
 		if (!GameController.instance.weapons [2]) {
-			if (GameController.instance.coins >= 5000) {
+			if (GameController.instance.coins >= priceTripleSwords) {
 				buyArrowsPanel.SetActive (true);
 				buyArrowsText.text = "Do you want to purchase Triple Swords ?";
 				yesBtn.onClick.RemoveAllListeners ();
@@ -78,7 +82,7 @@ public class ShopMenuController : MonoBehaviour
 	public void BuyDoubleStickyArrows ()
 	{
 		if (!GameController.instance.weapons [3]) {
-			if (GameController.instance.coins >= 7000) {
+			if (GameController.instance.coins >= priceHarpoonChain) {
 				buyArrowsPanel.SetActive (true);
 				buyArrowsText.text = "Do you want to purchase Harpoon Chain ?";
 				yesBtn.onClick.RemoveAllListeners ();
@@ -95,13 +99,13 @@ public class ShopMenuController : MonoBehaviour
 
 	public void BuyArrow (int index)
 	{
-		int payCoins = 3000;
+		int payCoins = priceDoubleSwords;
 
 		if (index == 2) {
-			payCoins = 5000;
+			payCoins = priceTripleSwords;
 
 		} else if (index == 3) {
-			payCoins = 7000;
+			payCoins = priceHarpoonChain;
 		}
 		
 		GameController.instance.weapons [index] = true;

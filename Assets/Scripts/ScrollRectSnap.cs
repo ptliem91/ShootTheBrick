@@ -174,7 +174,7 @@ public class ScrollRectSnap : MonoBehaviour
 			lvlSelected = 1;
 		}
 
-		print ("level current::" + lvlSelected);
+//		print ("level current::" + lvlSelected);
 
 		if (lvlSelected <= maxLevelActived) {
 			LoadingScreenScript.instance.PlayLoadingScreen ();

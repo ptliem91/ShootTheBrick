@@ -8,7 +8,7 @@ using System.Collections;
 
 public class Ball : MonoBehaviour
 {
-	private float forceX, forceY;
+	public float forceX, forceY;
 
 	[SerializeField]
 	private Rigidbody2D myBody;
@@ -32,6 +32,8 @@ public class Ball : MonoBehaviour
 	[SerializeField]
 	private GameObject coin;
 
+	private bool isInitFromBoss = false;
+
 	// Use this for initialization
 	void Awake ()
 	{
@@ -47,6 +49,9 @@ public class Ball : MonoBehaviour
 	void Update ()
 	{
 		MoveBall ();
+		if (isInitFromBoss) {
+			SetBallSpeed ();
+		}
 	}
 
 	void InstantiateBalls ()
@@ -131,7 +136,10 @@ public class Ball : MonoBehaviour
 	void SetBallSpeed ()
 	{
 		forceX = 2.5f;
-//		forceX = Random.Range (1, 4) + 0.5f;
+
+		if (isInitFromBoss) {
+			forceX = Random.Range (1, 4) + 0.5f;
+		}
 
 		switch (this.gameObject.tag) {
 		case "LargestBall":
@@ -161,19 +169,16 @@ public class Ball : MonoBehaviour
 		if (target.tag == "BottomBrick") {
 			myBody.velocity = new Vector2 (0, forceY);
 			AudioSource.PlayClipAtPoint (impactSound, transform.position);
-		}
 
-		if (target.tag == "RightBrick") {
+		} else if (target.tag == "RightBrick") {
 			SetMoveLeft (true);
 			AudioSource.PlayClipAtPoint (impactSound, transform.position);
-		}
 
-		if (target.tag == "LeftBrick") {
+		} else if (target.tag == "LeftBrick") {
 			SetMoveRight (true);
 			AudioSource.PlayClipAtPoint (impactSound, transform.position);
-		}
 
-		if (target.tag.Equals ("SoulSword") || target.tag.Equals ("SwordSticky")) {
+		} else if (target.tag.Equals ("SoulSword") || target.tag.Equals ("SwordSticky")) {
 			GameObject particleSys = InitExplosionParticle ();
 
 			if (Random.Range (1, 10) % 3 == 0) {
@@ -198,22 +203,6 @@ public class Ball : MonoBehaviour
 
 	private GameObject InitExplosionParticle ()
 	{
-//		switch (this.gameObject.tag) {
-//		case "LargestBall":
-//			return (GameObject)Instantiate (largestExplosionParticle, transform.position, Quaternion.identity);
-//
-//		case "LargeBall":
-//			return (GameObject)Instantiate (largeExplosionParticle, transform.position, Quaternion.identity);
-//
-//		case "MediumBall":
-//			return (GameObject)Instantiate (mediumExplosionParticle, transform.position, Quaternion.identity);
-//
-//		case "SmallBall":
-//			return (GameObject)Instantiate (smallExplosionParticle, transform.position, Quaternion.identity);
-//
-//		default:
-//			return (GameObject)Instantiate (mediumExplosionParticle, transform.position, Quaternion.identity);
-//		}
 		return (GameObject)Instantiate (explosionParticleStone, transform.position, Quaternion.identity);
 	}
 
@@ -224,32 +213,30 @@ public class Ball : MonoBehaviour
 		switch (objTag) {
 
 		case "LargestBall":
-//			GameplayController.instance.coins += Random.Range (15, 20);
 			GameplayController.instance.playerScore += Random.Range (600, 700);
 			break;
 
 		case "LargeBall":
-//			GameplayController.instance.coins += Random.Range (13, 18);
 			GameplayController.instance.playerScore += Random.Range (500, 600);
 			break;
 
 		case "MediumBall":
-//			GameplayController.instance.coins += Random.Range (11, 16);
 			GameplayController.instance.playerScore += Random.Range (400, 500);
 			break;
 
 		case "SmallBall":
-//			GameplayController.instance.coins += Random.Range (10, 15);
 			GameplayController.instance.playerScore += Random.Range (300, 400);
 			break;
 
 		case "SmallestBall":
-//			GameplayController.instance.coins += Random.Range (9, 14);
 			GameplayController.instance.playerScore += Random.Range (200, 300);
 			break;
-
 		}
-
 	}
 
+
+	public void SetIsInitFromBossvFromBoss (bool isInitFromBoss)
+	{
+		this.isInitFromBoss = isInitFromBoss;
+	}
 }

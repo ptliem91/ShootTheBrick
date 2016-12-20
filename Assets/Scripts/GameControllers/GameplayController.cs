@@ -280,7 +280,7 @@ public class GameplayController : MonoBehaviour
 			watchVideoText.text = "Don't give up! :)";
 		}
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1.5f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (0.5f));
 
 //		coins = 0;
 //		playerLives = 2;
@@ -295,7 +295,7 @@ public class GameplayController : MonoBehaviour
 			LoadingScreenScript.instance.FadeOut ();
 		}
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1.5f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (1f));
 
 //		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 
@@ -313,9 +313,10 @@ public class GameplayController : MonoBehaviour
 //		skeleton.GetComponent<Animator> ().SetBool ("HAppear", true);
 		skeleton.GetComponent<Animator> ().SetBool ("HDied", false);
 
-		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (2f));
+		yield return StartCoroutine (MyCoroutine.WaitForRealSeconds (0.5f));
 
 		levelInProgress = true;
+		pauseBtn.interactable = true;
 		Time.timeScale = 1f;
 	}
 
