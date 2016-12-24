@@ -66,34 +66,22 @@ public class FacebookController : MonoBehaviour
 	private void OnLogIn (ILoginResult result)
 	{
 		if (FB.IsLoggedIn) {
-			AccessToken token = AccessToken.CurrentAccessToken;
-//			txtUserId.text = token.UserId;
-			Debug.Log (token.UserId);
+//			AccessToken token = AccessToken.CurrentAccessToken;
 
-			// Print current access token's granted permissions
-			foreach (string perm in token.Permissions) {
-				Debug.Log (perm);
-			}
+			FB.ShareLink (new System.Uri ("https://play.google.com/store/apps/details?id=" + PACKAGE_NAME),
+				"Cut Stone Head",
+				callback: ShareCallback);
 
 		} else {
-			Debug.Log ("User cancelled login");
+			ShopMenuController.instance.PostFacebookFailed ();
 		}
 	}
 
 	public void Share ()
 	{
-		FB.ShareLink (
-			contentTitle: "Cut Stone Head",
-			contentURL: new System.Uri ("market://details?id=" + PACKAGE_NAME),
-			contentDescription: "A funny game for entertainment and relaxation! Join now!",
-//			photoURL: new System.Uri ("https://www.google.com.vn/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png"),
-			callback: ShareCallback);
-
-//		FB.FeedShare (link: new System.Uri ("http://www.google.ro"),
-//			linkName: "GOOGLE", 
-//			linkCaption: "The most popular search engine",
-//			picture: new System.Uri ("http://www.zilesinopti.ro/media/6040188556717c5d366f86.95994291.jpg"),
-//			callback: OnShare);
+		LogIn ();
+//		FB.ShareLink (new System.Uri ("https://play.google.com/store/apps/details?id=" + PACKAGE_NAME),
+//			callback: ShareCallback);
 	}
 
 	private void ShareCallback (IShareResult result)

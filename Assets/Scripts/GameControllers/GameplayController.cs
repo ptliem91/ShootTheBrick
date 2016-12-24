@@ -324,6 +324,11 @@ public class GameplayController : MonoBehaviour
 	{
 		smallBallsCount--;
 
+		checkLevelCompleted ();
+	}
+
+	public void checkLevelCompleted ()
+	{
 		if (smallBallsCount == 0) {
 			StartCoroutine (IELevelCompleted ());
 		}

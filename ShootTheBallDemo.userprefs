@@ -1,14 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameControllers/GameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BallScripts/BallBoss.cs">
     <Files>
-      <File FileName="Assets/Scripts/BallScripts/Balls.cs" Line="174" Column="38" />
-      <File FileName="Assets/Scripts/BallScripts/BallBoss.cs" Line="80" Column="2" />
-      <File FileName="Assets/Scripts/BallScripts/Ball.cs" Line="57" Column="2" />
-      <File FileName="Assets/Scripts/GameControllers/GameplayController.cs" Line="312" Column="65" />
-      <File FileName="Assets/Scripts/GameControllers/UnityAdsController.cs" Line="82" Column="47" />
-      <File FileName="Assets/Scripts/GameControllers/ShopMenuController.cs" Line="100" Column="34" />
-      <File FileName="Assets/Scripts/GameControllers/GameController.cs" Line="56" Column="3" />
+      <File FileName="Assets/Scripts/GameControllers/ShopMenuController.cs" Line="249" Column="37" />
+      <File FileName="Assets/Scripts/GameControllers/GameplayController.cs" Line="327" Column="26" />
+      <File FileName="Assets/Scripts/BallScripts/Ball.cs" Line="193" Column="38" />
+      <File FileName="Assets/Scripts/BallScripts/BallBoss.cs" Line="119" Column="24" />
+      <File FileName="Assets/Scripts/BallScripts/Balls.cs" Line="42" Column="41" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

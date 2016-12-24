@@ -241,6 +241,9 @@ public class ShopMenuController : MonoBehaviour
 		} else {
 			messageText.text = "Please try again or check your network connection.";
 		}
+
+		//Test
+//		FacebookController.instance.Share ();
 	}
 
 	public void PostFacebookSucceded ()
